@@ -8,9 +8,9 @@ export const signUp = (email, login, password) => {
       const response = await api.post("/auth/sign-up", { email, login, password });
       localStorage.setItem("accessToken", response.data.accessToken);
       dispatch({ type: authConstants.SET_USER, user: response.data.user });
-      dispatch({ type: authConstants.SIGN_UP_SUCCESS, message: response.data.message });
+      dispatch({ type: authConstants.PROCESS_SUCCESS, process: "signUp", message: response.data.message });
     } catch (err) {
-      dispatch({ type: authConstants.SIGN_UP_FAILURE, message: err.response.data.message });
+      dispatch({ type: authConstants.PROCESS_FAILURE, process: "signUp", message: err.response.data.message });
     }
   };
 };
@@ -21,9 +21,9 @@ export const signIn = (email, password) => {
       const response = await api.post("/auth/sign-in", { email, password });
       localStorage.setItem("accessToken", response.data.accessToken);
       dispatch({ type: authConstants.SET_USER, user: response.data.user });
-      dispatch({ type: authConstants.SIGN_IN_SUCCESS, message: response.data.message });
+      dispatch({ type: authConstants.PROCESS_SUCCESS, process: "signIn", message: response.data.message });
     } catch (err) {
-      dispatch({ type: authConstants.SIGN_IN_FAILURE, message: err.response.data.message });
+      dispatch({ type: authConstants.PROCESS_FAILURE, process: "signIn", message: err.response.data.message });
     }
   };
 };
@@ -31,16 +31,29 @@ export const signIn = (email, password) => {
 export const activate = activationLink => {
   return async dispatch => {
     try {
-      dispatch({ type: authConstants.ACTIVATION_FETCH });
+      dispatch({ type: authConstants.PROCESS_FETCH, process: "activation" });
       const response = await api.get("/auth/activate", {
         params: { activationLink }
       });
       localStorage.removeItem("accessToken");
       dispatch({ type: authConstants.REMOVE_USER });
-      dispatch({ type: authConstants.ACTIVATION_SUCCESS, message: response.data.message });
+      dispatch({ type: authConstants.PROCESS_SUCCESS, process: "activation", message: response.data.message });
     } catch (err) {
-      console.log(err);
-      dispatch({ type: authConstants.ACTIVATION_FAILURE, message: err.response.data.message });
+      dispatch({ type: authConstants.PROCESS_FAILURE, process: "activation", message: err.response.data.message });
+    }
+  };
+};
+
+export const refresh = () => {
+  return async dispatch => {
+    try {
+      dispatch({ type: authConstants.PROCESS_FETCH, process: "refresh" });
+      const response = await api.get("/auth/refresh");
+      localStorage.setItem("accessToken", response.data.accessToken);
+      dispatch({ type: authConstants.SET_USER, user: response.data.user });
+      dispatch({ type: authConstants.PROCESS_SUCCESS, process: "refresh", message: response.data.message });
+    } catch (err) {
+      dispatch({ type: authConstants.PROCESS_FAILURE, process: "refresh", message: err.response.data.message });
     }
   };
 };

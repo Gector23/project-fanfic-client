@@ -17,26 +17,16 @@ const auth = (state = initialState, action) => {
         ...stateClone,
         user: null
       };
-    case authConstants.SIGN_UP_SUCCESS:
-      stateClone.processes.signUp = { status: "success", message: action.message };
+    case authConstants.INITIAL_AUTH:
+      return initialState;
+    case authConstants.PROCESS_FETCH:
+      stateClone.processes[action.process] = { status: "fetch" };
       return stateClone;
-    case authConstants.SIGN_UP_FAILURE:
-      stateClone.processes.signUp = { status: "failure", message: action.message };
+    case authConstants.PROCESS_SUCCESS:
+      stateClone.processes[action.process] = { status: "success", message: action.message };
       return stateClone;
-    case authConstants.SIGN_IN_SUCCESS:
-      stateClone.processes.signIn = { status: "success", message: action.message };
-      return stateClone;
-    case authConstants.SIGN_IN_FAILURE:
-      stateClone.processes.signIn = { status: "failure", message: action.message };
-      return stateClone;
-    case authConstants.ACTIVATION_FETCH:
-      stateClone.processes.activation = { status: "fetch" };
-      return stateClone;
-    case authConstants.ACTIVATION_SUCCESS:
-      stateClone.processes.activation = { status: "success", message: action.message };
-      return stateClone;
-    case authConstants.ACTIVATION_FAILURE:
-      stateClone.processes.activation = { status: "failure", message: action.message };
+    case authConstants.PROCESS_FAILURE:
+      stateClone.processes[action.process] = { status: "failure", message: action.message };
       return stateClone;
     default:
       return state;
