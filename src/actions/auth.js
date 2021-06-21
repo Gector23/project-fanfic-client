@@ -57,3 +57,15 @@ export const refresh = () => {
     }
   };
 };
+
+export const signOut = () => {
+  return async dispatch => {
+    try {
+      const response = await api.get("/auth/sign-out");
+      dispatch({ type: authConstants.REMOVE_USER });
+      dispatch({ type: authConstants.PROCESS_SUCCESS, process: "sign-out", message: response.data.message });
+    } catch (err) {
+      dispatch({ type: authConstants.PROCESS_FAILURE, process: "sign-out", message: err.response.data.message });
+    }
+  };
+};
