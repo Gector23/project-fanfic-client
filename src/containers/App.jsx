@@ -5,6 +5,7 @@ import { Container } from "react-bootstrap";
 
 import { refresh } from "../actions/auth";
 
+import Header from "./Header";
 import SignUp from "./SignUp";
 import SignIn from "./SignIn";
 import Activate from "./Activate";
@@ -54,6 +55,7 @@ const App = () => {
     ) : (
       <Container>
         {user && !user.isActivated && location.pathname !== "/activation" && <Redirect to="/not-activated" />}
+        <Header />
         <Switch>
           <Route exact path="/sign-up">
             <SignUp />
