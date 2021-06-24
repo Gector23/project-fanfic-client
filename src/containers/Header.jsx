@@ -15,7 +15,7 @@ const Header = () => {
   }, [history]);
 
   const handleSignOut = useCallback(() => {
-    dispatch(signOut());
+    dispatch(signOut(), { shouldHandleLoadingState: true });
   }, [dispatch]);
 
   return (

@@ -5,6 +5,11 @@ const api = axios.create({
   withCredentials: true
 });
 
+api.interceptors.request.use(response => {
+  response.headers.Authorization = `Bearer ${localStorage.getItem("accessToken")}`
+  return response;
+})
+
 api.interceptors.response.use(response => {
   return response;
 }, async err => {

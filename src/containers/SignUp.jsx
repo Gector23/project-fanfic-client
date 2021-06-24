@@ -26,7 +26,7 @@ const SignUp = () => {
   };
 
   const onSubmit = data => {
-    dispatch(signUp(data.email, data.login, data.password));
+    dispatch(signUp(data.email, data.login, data.password), { shouldHandleLoadingState: true });
     reset({ email: "", ogin: "", password: "" });
   }
 

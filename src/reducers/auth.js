@@ -1,33 +1,22 @@
 import cloneDeep from "lodash.clonedeep";
 
-import * as authConstants from "../constants/auth";
+import { SET_USER, REMOVE_USER, INITIALIZED_PREFERENCES } from "../constants/auth";
 
-const initialState = { user: null, processes: {} };
-
-const auth = (state = initialState, action) => {
+const auth = (state = { user: null }, action) => {
   let stateClone = cloneDeep(state);
   switch (action.type) {
-    case authConstants.SET_USER:
-      return {
-        ...stateClone,
-        user: action.user
-      };
-    case authConstants.REMOVE_USER:
-      return {
-        ...stateClone,
-        user: null
-      };
-    case authConstants.INITIAL_AUTH:
-      return initialState;
-    case authConstants.PROCESS_FETCH:
-      stateClone.processes[action.process] = { status: "fetch" };
+    case SET_USER:
+      stateClone.user = action.user;
       return stateClone;
-    case authConstants.PROCESS_SUCCESS:
-      stateClone.processes[action.process] = { status: "success", message: action.message };
+
+    case REMOVE_USER:
+      stateClone.user = null;
       return stateClone;
-    case authConstants.PROCESS_FAILURE:
-      stateClone.processes[action.process] = { status: "failure", message: action.message };
+
+    case INITIALIZED_PREFERENCES:
+      stateClone.user.isInitializedPreferences = true;
       return stateClone;
+
     default:
       return state;
   }

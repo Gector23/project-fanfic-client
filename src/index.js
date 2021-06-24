@@ -9,11 +9,14 @@ import "./index.css";
 
 import rootReducer from "./reducers/index";
 
+import loadingMiddleware from "./middlewares/loadingMiddleware";
+
 import App from "./containers/App";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const middlewares = [loadingMiddleware, thunk];
 const store = createStore(rootReducer, composeEnhancers(
-  applyMiddleware(thunk)
+  applyMiddleware(...middlewares)
 ));
 
 ReactDOM.render(
