@@ -23,7 +23,7 @@ const SignIn = () => {
   const onSubmit = data => {
     dispatch(signIn(data.email, data.password), { shouldHandleLoadingState: true });
     reset({ email: "", password: "" });
-  }
+  };
 
   return (
     <Container>

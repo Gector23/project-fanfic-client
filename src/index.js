@@ -5,6 +5,8 @@ import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import { BrowserRouter as Router } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "react-mde/lib/styles/css/react-mde-all.css";
+import "@yaireo/tagify/dist/tagify.css";
 import "./index.css";
 
 import rootReducer from "./reducers/index";

@@ -1,0 +1,4 @@
+export const FANFIC_FETCH = "FANFIC_FETCH";
+export const FANFIC_SUCCESS = "FANFIC_SUCCESS";
+export const FANFIC_FAILURE = "FANFIC_FAILURE";
+export const REMOVE_FANFIC = "REMOVE_FANFIC";

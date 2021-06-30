@@ -9,6 +9,7 @@ import Header from "./Header";
 import SignUp from "./SignUp";
 import SignIn from "./SignIn";
 import Activate from "./Activate";
+import Fanfic from "./Fanfic";
 import NotActivated from "../components/NotActivated";
 import InitializePreferences from "./InitializePreferences";
 import Spinner from "../components/Spinner";
@@ -17,8 +18,6 @@ const App = () => {
   const location = useLocation();
   const user = useSelector(state => state.auth.user);
   const dispatch = useDispatch();
-
-  console.log(location);
 
   useEffect(() => {
     dispatch(initialAction(), { shouldHandleLoadingState: true });
@@ -57,6 +56,9 @@ const App = () => {
             </Route>
             <Route path="/activate">
               <Activate />
+            </Route>
+            <Route path="/fanfic/:fanficId">
+              <Fanfic />
             </Route>
           </Switch>
           <Spinner />

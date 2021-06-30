@@ -1,10 +1,14 @@
 import cloneDeep from "lodash.clonedeep";
 
-import { PROCESS_SUCCESS, PROCESS_FAILURE } from "../constants/processes";
+import { PROCESS_FETCH, PROCESS_SUCCESS, PROCESS_FAILURE } from "../constants/processes";
 
 const processes = (state = {}, action) => {
   let stateClone = cloneDeep(state);
   switch (action.type) {
+    case PROCESS_FETCH:
+      stateClone[action.process] = { status: "fetch" };
+      return stateClone;
+
     case PROCESS_SUCCESS:
       stateClone[action.process] = { status: "success", message: action.message };
       return stateClone;

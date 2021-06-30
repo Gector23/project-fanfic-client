@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { activate } from "../actions/auth";
 
+import Notice from "../components/Notice";
+
 const Activate = () => {
   const activationLink = useLocation().search.match(/[^=]*$/)[0];
   const activation = useSelector(state => state.processes.activation);
@@ -15,20 +17,13 @@ const Activate = () => {
 
   return (
     !activation ? null : activation.status === "success" ? (
-      <div className="text-center">
-        <h4>Thank You!</h4>
-        <p>
-          {activation.message}
-        </p>
-        <Link className="btn btn-link" to="../sign-in" replace >Head to sign in</Link>
-      </div>
+      <Notice
+        heading="Thank You!"
+        message={activation.message}
+        type="success"
+        link={<Link className="btn btn-link" to="../sign-in" replace >Head to sign in</Link>} />
     ) : (
-      <div className="text-center">
-        <h4>Something went wrong</h4>
-        <p>
-          {activation.message}
-        </p>
-      </div>
+      <Notice heading="Something went wrong" message={activation.message} type="danger" />
     )
   );
 };
