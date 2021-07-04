@@ -18,7 +18,8 @@ export const getFanfic = (fanficId, lastUpdate) => {
           fanficId,
           message: fanficResponse.data.message,
           data: fanficResponse.data.fanfic,
-          chapters: fanficResponse.data.chapters
+          chapters: fanficResponse.data.chapters,
+          userRate: fanficResponse.data.userRate
         }
       });
     } catch (err) {
@@ -36,6 +37,21 @@ export const updateFanfic = (fanficId, update) => {
   return async dispatch => {
     try {
       await api.patch(`/fanfic/update/${fanficId}`, update);
+      dispatch({
+        type: REMOVE_FANFIC, payload: {
+          fanficId
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+export const setFanficRate = (fanficId, value) => {
+  return async dispatch => {
+    try {
+      await api.post(`/fanfic/${fanficId}/rate`, { value });
       dispatch({
         type: REMOVE_FANFIC, payload: {
           fanficId

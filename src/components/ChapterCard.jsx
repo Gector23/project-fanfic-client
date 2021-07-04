@@ -9,13 +9,14 @@ import { ReactComponent as DeleteIcon } from "../icons/trash.svg";
 
 import ChapterRead from "./ChapterRead";
 import ChapterEditor from "./ChapterEditor";
+import Like from "./Like";
 import IconButton from "./IconButton";
 
-const ChapterCard = ({ chapterData, onShowEditForm, mode, onToggleMode, onUpdateChapter, onDeleteChapter }) => {
-  const [editorValue, setEditorValue] = useState(chapterData.content);
+const ChapterCard = (props) => {
+  const [editorValue, setEditorValue] = useState(props.chapterData.content);
 
   const handleUpdateContent = () => {
-    onUpdateChapter({
+    props.onUpdateChapter({
       content: editorValue
     });
   };
@@ -24,23 +25,36 @@ const ChapterCard = ({ chapterData, onShowEditForm, mode, onToggleMode, onUpdate
     <Card className="mb-5">
       <Card.Header>
         <div className="d-flex justify-content-end">
-          <IconButton icon={<EditIcon />} onClick={onShowEditForm} />
-          <IconButton icon={mode === "read" ? <EditModeIcon /> : <ReadModeIcon />} onClick={onToggleMode} />
-          <IconButton icon={<SaveIcon />} disabled={chapterData.content === editorValue} onClick={handleUpdateContent} />
-          <IconButton icon={<DeleteIcon />} type="danger" onClick={onDeleteChapter} />
+          <IconButton icon={<EditIcon />} onClick={props.onShowEditForm} />
+          <IconButton icon={props.mode === "read" ? <EditModeIcon /> : <ReadModeIcon />} onClick={props.onToggleMode} />
+          <IconButton
+            icon={<SaveIcon />}
+            disabled={props.chapterData.content === editorValue}
+            onClick={handleUpdateContent}
+          />
+          <IconButton icon={<DeleteIcon />} type="danger" onClick={props.onDeleteChapter} />
         </div>
       </Card.Header>
       <Card.Body>
-        <Card.Title>{chapterData.name}</Card.Title>
+        <Card.Title>{props.chapterData.name}</Card.Title>
         <Card.Text as="div">
-          {mode === "read" ? (
-            <ChapterRead content={chapterData.content} />
+          {props.mode === "read" ? (
+            <ChapterRead content={props.chapterData.content} />
           ) : (
             <ChapterEditor value={editorValue} onChange={setEditorValue} />
           )}
         </Card.Text>
       </Card.Body>
-      <Card.Footer>Last update: {new Date(chapterData.lastUpdate).toLocaleString()}</Card.Footer>
+      <Card.Footer className="d-flex flex-column flex-sm-row justify-content-between">
+        <span>
+          Last update: {new Date(props.chapterData.lastUpdate).toLocaleString()}
+        </span>
+        <div className="d-flex text-danger">
+          <span className="mr-1">{props.chapterData.likesCount}</span>
+          <Like isLiked={props.isLiked} onLikeClick={props.onLikeClick} />
+        </div>
+
+      </Card.Footer>
     </Card>
   );
 };

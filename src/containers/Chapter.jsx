@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { getChapter, updateChapter, deleteChapter } from "../actions/chapters";
+import { getChapter, updateChapter, deleteChapter, toggleChapterLike } from "../actions/chapters";
 
 import ChapterCard from "../components/ChapterCard";
 import ChapterForm from "../components/ChapterForm";
@@ -50,6 +50,10 @@ const Chapter = ({ fanficId, chapterId, onChapterChange }) => {
     dispatch(deleteChapter(fanficId, chapterId));
   }, [dispatch, fanficId, chapterId]);
 
+  const handleLikeClick = useCallback(() => {
+    dispatch(toggleChapterLike(chapterId, chapter.isLiked));
+  }, [dispatch, chapterId, chapter?.isLiked]);
+
   if (!chapterId) {
     return (
       <Notice heading="Something went wrong" message="Chapter not found." type="danger" />
@@ -67,11 +71,13 @@ const Chapter = ({ fanficId, chapterId, onChapterChange }) => {
         />
         <ChapterCard
           chapterData={chapter.data}
+          isLiked={chapter.isLiked}
           onShowEditForm={handleShowEditForm}
           mode={mode}
           onToggleMode={handleToggleMode}
           onUpdateChapter={handleUpdateChapter}
           onDeleteChapter={handleDeleteChapter}
+          onLikeClick={handleLikeClick}
           />  
       </>
     ) : (

@@ -28,7 +28,8 @@ const chapters = (state = [], action) => {
       stateClone[chapterIndex] = {
         status: "success",
         message: action.payload.message,
-        data: action.payload.data
+        data: action.payload.data,
+        isLiked: action.payload.isLiked
       };
       return stateClone;
 
@@ -44,7 +45,7 @@ const chapters = (state = [], action) => {
 
     case REMOVE_CHAPTER:
       stateClone = cloneDeep(state);
-      return stateClone.filter(chapter => chapter._id !== action.payload.chapterId);
+      return stateClone.filter(chapter => chapter.data._id !== action.payload.chapterId);
 
     default:
       return state;

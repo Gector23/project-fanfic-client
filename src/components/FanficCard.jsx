@@ -4,14 +4,18 @@ import { Card } from "react-bootstrap";
 import { ReactComponent as EditIcon } from "../icons/pen.svg";
 import { ReactComponent as DeleteIcon } from "../icons/trash.svg";
 
+import Rate from "./Rate";
 import IconButton from "./IconButton";
 import Tag from "./Tag";
 
-const FanficCard = ({ fanficData, onShowEditForm, onDeleteFanfic }) => {
+const FanficCard = ({ fanficData, userRate, onShowEditForm, onDeleteFanfic, onRate }) => {
   return (
     <Card className="mb-5">
-      <Card.Header>
-        <div className="d-flex justify-content-end">
+      <Card.Header className="d-flex justify-content-between align-items-center">
+        <span>
+          Author: <Link to={`/profile/${fanficData.user._id}`} >{fanficData.user.login}</Link>
+        </span>
+        <div className="d-flex">
           <IconButton icon={<EditIcon />} onClick={onShowEditForm} />
           <IconButton icon={<DeleteIcon />} type="danger" onClick={onDeleteFanfic} />
         </div>
@@ -25,9 +29,10 @@ const FanficCard = ({ fanficData, onShowEditForm, onDeleteFanfic }) => {
         <span>
           Last update: {new Date(fanficData.lastUpdate).toLocaleString()}
         </span>
-        <span>
-          Author: <Link to={`/profile/${fanficData.user._id}`} >{fanficData.user.login}</Link>
-        </span>
+        <div className="d-flex text-primary">
+          <span className="mr-1">Rating: {fanficData.rating} on {fanficData.ratesCount} user ratings</span>
+          <Rate userRate={userRate} onRate={onRate} />
+        </div>
       </Card.Footer>
     </Card>
   );

@@ -11,3 +11,7 @@ body {
   background-color: #ffffff;
   z-index: 9999;
 }
+
+.pointer {
+  cursor: pointer;
+}

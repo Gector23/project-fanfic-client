@@ -18,7 +18,8 @@ export const getChapter = (chapterId, lastUpdate) => {
         type: CHAPTER_SUCCESS, payload: {
           chapterId,
           message: chapterResponse.data.message,
-          data: chapterResponse.data.chapter
+          data: chapterResponse.data.chapter,
+          isLiked: chapterResponse.data.isLiked
         }
       });
     } catch (err) {
@@ -41,6 +42,25 @@ export const updateChapter = (fanficId, chapterId, update) => {
           fanficId
         }
       });
+      dispatch({
+        type: REMOVE_CHAPTER, payload: {
+          chapterId
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+export const toggleChapterLike = (chapterId, isLiked) => {
+  return async dispatch => {
+    try {
+      isLiked ? (
+        await api.get(`/chapter/${chapterId}/unlike`)
+      ) : (
+        await api.get(`/chapter/${chapterId}/like`)
+      )
       dispatch({
         type: REMOVE_CHAPTER, payload: {
           chapterId
