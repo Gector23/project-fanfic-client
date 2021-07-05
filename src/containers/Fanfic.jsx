@@ -80,6 +80,8 @@ const Fanfic = () => {
             <Chapter
               fanficId={fanficId}
               chapterId={fanfic.chapters[activeChapter]?._id}
+              currentUrl={url}
+              chaptersLength={fanfic.chapters.length}
               onChapterChange={setActiveChapter}
             />
           </Route>

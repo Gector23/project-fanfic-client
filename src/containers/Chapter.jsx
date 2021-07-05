@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { Pagination } from "react-bootstrap";
 
 import { getChapter, updateChapter, deleteChapter, toggleChapterLike } from "../actions/chapters";
 
@@ -8,8 +9,9 @@ import ChapterCard from "../components/ChapterCard";
 import ChapterForm from "../components/ChapterForm";
 import Notice from "../components/Notice";
 
-const Chapter = ({ fanficId, chapterId, onChapterChange }) => {
+const Chapter = ({ fanficId, chapterId, currentUrl, chaptersLength, onChapterChange }) => {
   const { chapterNumber } = useParams();
+  const history = useHistory();
 
   const [mode, setMode] = useState("read");
   const [showEditForm, setShowEditForm] = useState(false);
@@ -54,6 +56,14 @@ const Chapter = ({ fanficId, chapterId, onChapterChange }) => {
     dispatch(toggleChapterLike(chapterId, chapter.isLiked));
   }, [dispatch, chapterId, chapter?.isLiked]);
 
+  const prevChapter = () => {
+    history.push(`${currentUrl}/${+chapterNumber - 1}`);
+  };
+
+  const nextChapter = () => {
+    history.push(`${currentUrl}/${+chapterNumber + 1}`);
+  };
+
   if (!chapterId) {
     return (
       <Notice heading="Something went wrong" message="Chapter not found." type="danger" />
@@ -78,7 +88,11 @@ const Chapter = ({ fanficId, chapterId, onChapterChange }) => {
           onUpdateChapter={handleUpdateChapter}
           onDeleteChapter={handleDeleteChapter}
           onLikeClick={handleLikeClick}
-          />  
+        />
+        <Pagination className="d-flex justify-content-between">
+          <Pagination.Prev disabled={+chapterNumber === 1} onClick={prevChapter} />
+          <Pagination.Next disabled={+chapterNumber === chaptersLength} onClick={nextChapter} />
+        </Pagination>
       </>
     ) : (
       <Notice heading="Something went wrong" message={chapter.message} type="danger" />
