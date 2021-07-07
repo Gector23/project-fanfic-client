@@ -3,16 +3,16 @@ import { Link, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Navbar, Form, FormControl, Nav, NavDropdown, Button } from "react-bootstrap";
 
-import { signOut } from "../actions/auth";
+import { signOut } from "../actions/user";
 
 const Header = () => {
   const history = useHistory();
-  const user = useSelector(state => state.auth.user);
+  const user = useSelector(state => state.user.data);
   const dispatch = useDispatch();
 
   const handleProfile = useCallback(() => {
-    history.push("/profile");
-  }, [history]);
+    history.push(`/profile/${user._id}`);
+  }, [history, user]);
 
   const handleSignOut = useCallback(() => {
     dispatch(signOut(), { shouldHandleLoadingState: true });

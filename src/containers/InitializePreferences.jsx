@@ -1,15 +1,16 @@
 import { useSelector, useDispatch } from "react-redux";
 
-import { setPreferences } from "../actions/common";
+import { setPreferences } from "../actions/user";
 
 import PreferencesList from "../components/PreferencesList";
 
 const InitializePreferences = () => {
   const fandoms = useSelector(state => state.fandoms);
+  const userId = useSelector(state => state.user.data._id);
   const dispatch = useDispatch();
 
   const handleSetPreferences = preferences => {
-    dispatch(setPreferences(preferences));
+    dispatch(setPreferences(userId, preferences));
   };
 
   return (

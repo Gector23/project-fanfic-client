@@ -3,7 +3,7 @@ import { Alert } from "react-bootstrap";
 const Notice = ({ heading, message, link, type = "primary" }) => {
   return (
     <Alert variant={type}>
-      <Alert.Heading>{heading}</Alert.Heading>
+      <Alert.Heading>{heading || "Something went wrong"}</Alert.Heading>
       <p>{message}</p>
       {link && (
         <>

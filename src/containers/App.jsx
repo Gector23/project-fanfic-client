@@ -4,23 +4,29 @@ import { useSelector, useDispatch } from "react-redux";
 import { Container } from "react-bootstrap";
 
 import { initialAction } from "../actions/common";
+import { refresh } from "../actions/user";
 
 import Header from "./Header";
-import SignUp from "./SignUp";
-import SignIn from "./SignIn";
-import Activate from "./Activate";
-import Fanfic from "./Fanfic";
+import SignUpPage from "../pages/SignUpPage";
+import SignInPage from "../pages/SignInPage";
+import ActivatePage from "../pages/ActivatePage";
+import FanficPage from "../pages/FanficPage";
+import ProfilePage from "../pages/ProfilePage";
 import NotActivated from "../components/NotActivated";
 import InitializePreferences from "./InitializePreferences";
 import Spinner from "../components/Spinner";
 
 const App = () => {
   const location = useLocation();
-  const user = useSelector(state => state.auth.user);
+  const user = useSelector(state => state.user.data);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(initialAction(), { shouldHandleLoadingState: true });
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(refresh());
   }, [dispatch]);
 
   switch (location.pathname) {
@@ -49,16 +55,19 @@ const App = () => {
           <Header />
           <Switch>
             <Route exact path="/sign-up">
-              <SignUp />
+              <SignUpPage />
             </Route>
             <Route exact path="/sign-in">
-              <SignIn />
+              <SignInPage />
             </Route>
             <Route path="/activate">
-              <Activate />
+              <ActivatePage />
             </Route>
             <Route path="/fanfic/:fanficId">
-              <Fanfic />
+              <FanficPage />
+            </Route>
+            <Route path="/profile/:userId">
+              <ProfilePage />
             </Route>
           </Switch>
           <Spinner />

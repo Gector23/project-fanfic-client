@@ -1,7 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useRouteMatch, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Pagination } from "react-bootstrap";
+
+import useNeedUpdate from "../hooks/useNeedUpdate";
+import useShowModal from "../hooks/useShowModal";
 
 import { getChapter, updateChapter, deleteChapter, toggleChapterLike } from "../actions/chapters";
 
@@ -9,43 +12,33 @@ import ChapterCard from "../components/ChapterCard";
 import ChapterForm from "../components/ChapterForm";
 import Notice from "../components/Notice";
 
-const Chapter = ({ fanficId, chapterId, currentUrl, chaptersLength, onChapterChange }) => {
+const Chapter = ({ fanficId, chapterId, chaptersLength, onChapterChange }) => {
   const { chapterNumber } = useParams();
-  const history = useHistory();
-
+  const chapter = useSelector(state => state.chapters.find(chapter => chapter.data?._id === chapterId));
+  const needUpdate = useNeedUpdate("chapter", chapterId, chapter?.data?.lastUpdate);
   const [mode, setMode] = useState("read");
-  const [showEditForm, setShowEditForm] = useState(false);
-
+  const [showEditForm, onShowEditForm, onHideEditForm] = useShowModal();
+  const { url } = useRouteMatch();
+  const history = useHistory();
   const dispatch = useDispatch();
-  const chapter = useSelector(state => state.chapters.find(chapter => {
-    return chapter.data?._id === chapterId;
-  }));
 
   useEffect(() => {
     onChapterChange(chapterNumber - 1);
   }, [onChapterChange, chapterNumber]);
 
   useEffect(() => {
-    if (chapterId && (!chapter || chapter.status === "success")) {
-      dispatch(getChapter(chapterId, chapter?.data.lastUpdate), { shouldHandleLoadingState: true });
+    if ((!chapter || (chapter.status === "success" && needUpdate)) && chapterId) {
+      dispatch(getChapter(chapterId), { shouldHandleLoadingState: true });
     }
-  }, [dispatch, chapter, chapterId]);
+  }, [dispatch, chapterId, chapter, needUpdate]);
 
   const handleToggleMode = () => {
     setMode(mode === "read" ? "edit" : "read");
   };
 
-  const handleShowEditForm = useCallback(() => {
-    setShowEditForm(true);
-  }, []);
-
-  const handleHideEditForm = useCallback(() => {
-    setShowEditForm(false);
-  }, []);
-
   const handleUpdateChapter = update => {
     dispatch(updateChapter(fanficId, chapterId, update));
-    setShowEditForm(false);
+    onHideEditForm();
   };
 
   const handleDeleteChapter = useCallback(() => {
@@ -57,11 +50,11 @@ const Chapter = ({ fanficId, chapterId, currentUrl, chaptersLength, onChapterCha
   }, [dispatch, chapterId, chapter?.isLiked]);
 
   const prevChapter = () => {
-    history.push(`${currentUrl}/${+chapterNumber - 1}`);
+    history.push(`${url}/${+chapterNumber - 1}`);
   };
 
   const nextChapter = () => {
-    history.push(`${currentUrl}/${+chapterNumber + 1}`);
+    history.push(`${url}/${+chapterNumber + 1}`);
   };
 
   if (!chapterId) {
@@ -75,14 +68,14 @@ const Chapter = ({ fanficId, chapterId, currentUrl, chaptersLength, onChapterCha
       <>
         <ChapterForm
           showEditForm={showEditForm}
-          chapterData={chapter.data}
-          onHideEditForm={handleHideEditForm}
+          initialData={chapter.data}
+          onHideEditForm={onHideEditForm}
           onUpdateChapter={handleUpdateChapter}
         />
         <ChapterCard
           chapterData={chapter.data}
           isLiked={chapter.isLiked}
-          onShowEditForm={handleShowEditForm}
+          onShowEditForm={onShowEditForm}
           mode={mode}
           onToggleMode={handleToggleMode}
           onUpdateChapter={handleUpdateChapter}
@@ -95,7 +88,7 @@ const Chapter = ({ fanficId, chapterId, currentUrl, chaptersLength, onChapterCha
         </Pagination>
       </>
     ) : (
-      <Notice heading="Something went wrong" message={chapter.message} type="danger" />
+      <Notice message={chapter.message} type="danger" />
     )
   );
 };

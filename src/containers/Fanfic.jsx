@@ -1,94 +1,67 @@
-import { useState, useEffect, useCallback } from "react";
-import { useRouteMatch, useParams, Switch, Route } from "react-router-dom";
+import { useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { getFanfic, updateFanfic, deleteFanfic, moveChapter, setFanficRate } from "../actions/fanfics";
+import useNeedUpdate from "../hooks/useNeedUpdate";
+import useShowModal from "../hooks/useShowModal";
 
-import FanficCard from "../components/FanficCard";
+import { getFanfic, updateFanfic, deleteFanfic, setFanficRate } from "../actions/fanfics";
+
+import { ReactComponent as EditIcon } from "../icons/pen.svg";
+import { ReactComponent as DeleteIcon } from "../icons/trash.svg";
+
+import FanficCard from "./FanficCard";
 import FanficForm from "../components/FanficForm";
-import ChaptersList from "../components/ChapersList";
-import Chapter from "./Chapter";
+import IconButton from "../components/IconButton";
 import Notice from "../components/Notice";
 
-const Fanfic = () => {
-  const { fanficId } = useParams();
-  const { path, url } = useRouteMatch();
-
-  const [activeChapter, setActiveChapter] = useState(null);
-  const [showEditForm, setShowEditForm] = useState(false);
-
+const Fanfic = ({ fanficId }) => {
+  const [showFanficForm, onShowFanficForm, onHideFanficForm] = useShowModal();
   const dispatch = useDispatch();
-  const fanfic = useSelector(state => state.fanfics.find(fanfic => {
-    return fanfic.data?._id === fanficId;
-  }));
+  const fanfic = useSelector(state => state.fanfics.find(fanfic => fanfic.data._id === fanficId));
+  const needUpdate = useNeedUpdate("fanfic", fanficId, fanfic?.data?.lastUpdate);
 
   useEffect(() => {
-    if (!fanfic || fanfic.status === "success") {
-      dispatch(getFanfic(fanficId, fanfic?.data.lastUpdate));
+    if (!fanfic || (fanfic.status === "success" && needUpdate)) {
+      dispatch(getFanfic(fanficId));
     }
-  }, [dispatch, fanfic, fanficId]);
-
-  const handleShowEditForm = useCallback(() => {
-    setShowEditForm(true);
-  }, []);
-
-  const handleHideEditForm = useCallback(() => {
-    setShowEditForm(false);
-  }, []);
+  }, [dispatch, fanficId, fanfic, needUpdate]);
 
   const handleUpdateFanfic = update => {
     dispatch(updateFanfic(fanficId, update));
-    setShowEditForm(false);
+    onHideFanficForm();
   };
 
   const handleDeleteFanfic = useCallback(() => {
     dispatch(deleteFanfic(fanficId));
   }, [dispatch, fanficId]);
 
-  const handleMoveChapter = (chapterId, number) => {
-    dispatch(moveChapter(fanficId, chapterId, number));
-  };
-
   const handleRate = value => {
     dispatch(setFanficRate(fanficId, value));
   };
 
+  const fanficCardButtons = [
+    <IconButton key="editIcon" icon={<EditIcon />} onClick={onShowFanficForm} />,
+    <IconButton key="deleteIcon" icon={<DeleteIcon />} type="danger" onClick={handleDeleteFanfic} />
+  ];
+
   return (
     !fanfic || fanfic?.status === "fetch" ? null : fanfic.status === "success" ? (
-      <>
-        <FanficForm
-          showEditForm={showEditForm}
-          fanficData={fanfic.data}
-          onHideEditForm={handleHideEditForm}
-          onUpdateFanfic={handleUpdateFanfic}
-        />
+      <div>
         <FanficCard
           fanficData={fanfic.data}
           userRate={fanfic.userRate}
-          onShowEditForm={handleShowEditForm}
-          onDeleteFanfic={handleDeleteFanfic}
+          buttons={fanficCardButtons}
           onRate={handleRate}
         />
-        <ChaptersList
-          chapters={fanfic.chapters}
-          currentUrl={url}
-          activeChapter={activeChapter}
-          onMoveChapter={handleMoveChapter}
+        <FanficForm
+          showEditForm={showFanficForm}
+          initialData={fanfic.data}
+          onHideEditForm={onHideFanficForm}
+          onSetFanfic={handleUpdateFanfic}
         />
-        <Switch>
-          <Route path={`${path}/:chapterNumber`}>
-            <Chapter
-              fanficId={fanficId}
-              chapterId={fanfic.chapters[activeChapter]?._id}
-              currentUrl={url}
-              chaptersLength={fanfic.chapters.length}
-              onChapterChange={setActiveChapter}
-            />
-          </Route>
-        </Switch>
-      </>
+      </div>
     ) : (
-      <Notice heading="Something went wrong" message={fanfic.message} type="danger" />
+      <Notice message={fanfic.message} type="danger" />
     )
   );
 };

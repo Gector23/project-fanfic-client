@@ -14,7 +14,15 @@ const checkTagChange = tags => {
   return false;
 };
 
-const FanficForm = ({ showEditForm, fanficData, onHideEditForm, onUpdateFanfic }) => {
+const defaultData = {
+  name: "",
+  description: "",
+  fandom: null,
+  tags: [],
+  default: true
+};
+
+const FanficForm = ({ showEditForm, initialData = defaultData, onHideEditForm, onSetFanfic }) => {
   const tagsRef = useRef();
   const fandoms = useSelector(state => state.fandoms);
 
@@ -25,13 +33,13 @@ const FanficForm = ({ showEditForm, fanficData, onHideEditForm, onUpdateFanfic }
       required: { value: true, message: "Fanfic name is required" },
       minLength: { value: 10, message: "Fanfic name min length is 10" },
       maxLength: { value: 80, message: "Fanfic name max length is 80" },
-      value: fanficData.name
+      value: initialData.name
     },
     description: {
       required: { value: true, message: "Description is required" },
       minLength: { value: 20, message: "Description min length is 20" },
       maxLength: { value: 80, message: "Description max length is 80" },
-      value: fanficData.description
+      value: initialData.description
     },
     fandom: {
       required: { value: true, message: "Fandom is required" }
@@ -39,26 +47,26 @@ const FanficForm = ({ showEditForm, fanficData, onHideEditForm, onUpdateFanfic }
   };
 
   const onSubmit = data => {
-    let update = {};
+    let fanficData = {};
     const tags = tagsRef.current.value;
-    if (data.name !== fanficData.name) {
-      update.name = data.name;
+    if (data.name !== initialData.name) {
+      fanficData.name = data.name;
     }
-    if (data.description !== fanficData.description) {
-      update.description = data.description;
+    if (data.description !== initialData.description) {
+      fanficData.description = data.description;
     }
-    if (data.fandom !== fanficData.fandom._id) {
-      update.fandom = data.fandom;
+    if (data.fandom !== initialData.fandom?._id) {
+      fanficData.fandom = data.fandom;
     }
-    if (tags.length !== fanficData.tags.length || checkTagChange(tags)) {
-      update.tags = tags.map(tag => {
+    if (tags.length !== initialData.tags.length || checkTagChange(tags)) {
+      fanficData.tags = tags.map(tag => {
         return {
           value: tag.value,
           _id: tag._id
         };
       });
     }
-    onUpdateFanfic(update);
+    onSetFanfic(fanficData);
   };
 
   return (
@@ -95,7 +103,7 @@ const FanficForm = ({ showEditForm, fanficData, onHideEditForm, onUpdateFanfic }
               {...register("fandom", { ...validationRules.fandom })}
             >
               {fandoms.map(fandom => {
-                const selected = fandom._id === fanficData.fandom._id;
+                const selected = fandom._id === initialData.fandom?._id;
                 return <option key={fandom._id} defaultValue={selected} value={fandom._id}>{fandom.name}</option>
               })}
             </Form.Control>
@@ -104,10 +112,10 @@ const FanficForm = ({ showEditForm, fanficData, onHideEditForm, onUpdateFanfic }
             </Form.Control.Feedback>
           </div>
           <div className="mb-3">
-            <TagField ref={tagsRef} initialTags={fanficData.tags} />
+            <TagField ref={tagsRef} initialTags={initialData.tags} />
           </div>
           <div className="text-center">
-            <Button variant="primary" type="submit">{fanficData ? "Update fanfic" : "Create fanfic"}</Button>
+            <Button variant="primary" type="submit">{initialData.default ? "Create fanfic" : "Update fanfic"}</Button>
           </div>
         </Form>
       </Modal.Body>

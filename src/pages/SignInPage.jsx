@@ -3,9 +3,9 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Form, Container, Row, Col, Button } from "react-bootstrap";
 
-import { signIn } from "../actions/auth";
+import { signIn } from "../actions/user";
 
-const SignIn = () => {
+const SignInPage = () => {
   const dispatch = useDispatch();
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
@@ -61,4 +61,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignInPage;

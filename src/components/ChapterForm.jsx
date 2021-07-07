@@ -1,7 +1,12 @@
 import { useForm } from "react-hook-form";
 import { Modal, Form, Button } from "react-bootstrap";
 
-const ChapterForm = ({ showEditForm, chapterData, onHideEditForm, onUpdateChapter }) => {
+const defaultData = {
+  name: "",
+  default: true
+};
+
+const ChapterForm = ({ showEditForm, initialData = defaultData, onHideEditForm, onSetChapter }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const validationRules = {
@@ -9,16 +14,16 @@ const ChapterForm = ({ showEditForm, chapterData, onHideEditForm, onUpdateChapte
       required: { value: true, message: "Chapter name is required" },
       minLength: { value: 10, message: "Chapter name min length is 10" },
       maxLength: { value: 80, message: "Chapter name max length is 80" },
-      value: chapterData.name
+      value: initialData.name
     }
   };
 
   const onSubmit = data => {
-    let update = {};
-    if (data.name !== chapterData.name) {
-      update.name = data.name;
+    let chapterData = {};
+    if (data.name !== initialData.name) {
+      chapterData.name = data.name;
     }
-    onUpdateChapter(update);
+    onSetChapter(chapterData);
   };
 
   return (
@@ -29,7 +34,7 @@ const ChapterForm = ({ showEditForm, chapterData, onHideEditForm, onUpdateChapte
             <Form.Control
               isInvalid={errors.name}
               type="text"
-              placeholder="Fanfic name"
+              placeholder="Chapter name"
               {...register("name", { ...validationRules.name })}
             />
             <Form.Control.Feedback type="invalid">
@@ -37,7 +42,7 @@ const ChapterForm = ({ showEditForm, chapterData, onHideEditForm, onUpdateChapte
             </Form.Control.Feedback>
           </div>
           <div className="text-center">
-            <Button variant="primary" type="submit">{chapterData ? "Update chapter" : "Create chapter"}</Button>
+            <Button variant="primary" type="submit">{initialData.default ? "Create chapter" : "Update chapter"}</Button>
           </div>
         </Form>
       </Modal.Body>

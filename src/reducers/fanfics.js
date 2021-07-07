@@ -29,7 +29,6 @@ const fanfics = (state = [], action) => {
         status: "success",
         message: action.payload.message,
         data: action.payload.data,
-        chapters: action.payload.chapters,
         userRate: action.payload.userRate
       };
       return stateClone;

@@ -3,15 +3,9 @@ import api from "../utils/api";
 import { CHAPTER_FETCH, CHAPTER_SUCCESS, CHAPTER_FAILURE, REMOVE_CHAPTER } from "../constants/chapters";
 import { REMOVE_FANFIC } from "../constants/fanfics";
 
-export const getChapter = (chapterId, lastUpdate) => {
+export const getChapter = chapterId => {
   return async dispatch => {
     try {
-      if (lastUpdate) {
-        const lastUpdateResponse = await api.get(`/chapter/last-update/${chapterId}`);
-        if (lastUpdateResponse.data.lastUpdate === lastUpdate) {
-          return;
-        }
-      }
       dispatch({ type: CHAPTER_FETCH, payload: { chapterId } });
       const chapterResponse = await api.get(`/chapter/${chapterId}`);
       dispatch({
@@ -31,6 +25,29 @@ export const getChapter = (chapterId, lastUpdate) => {
       });
     }
   };
+};
+
+export const createChapter = (chapterData, fanficId) => {
+  return async dispatch => {
+    try {
+      const response = await api.post("/chapter/create", {fanfic: fanficId, ...chapterData});
+      dispatch({
+        type: REMOVE_FANFIC, payload: {
+          fanficId
+        }
+      });
+      dispatch({
+        type: CHAPTER_SUCCESS, payload: {
+          chapterId: response.data.chapter._id,
+          message: response.data.message,
+          data: response.data.fanfic,
+          isLiked: response.data.isLiked
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 };
 
 export const updateChapter = (fanficId, chapterId, update) => {

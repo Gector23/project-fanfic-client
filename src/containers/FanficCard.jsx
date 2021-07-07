@@ -1,14 +1,11 @@
 import { Link } from "react-router-dom";
 import { Card } from "react-bootstrap";
 
-import { ReactComponent as EditIcon } from "../icons/pen.svg";
-import { ReactComponent as DeleteIcon } from "../icons/trash.svg";
+import Rate from "../components/Rate";
+import Fandom from "../components/Fandom";
+import Tag from "../components/Tag";
 
-import Rate from "./Rate";
-import IconButton from "./IconButton";
-import Tag from "./Tag";
-
-const FanficCard = ({ fanficData, userRate, onShowEditForm, onDeleteFanfic, onRate }) => {
+const FanficCard = ({ fanficData, userRate, buttons, onRate }) => {
   return (
     <Card className="mb-5">
       <Card.Header className="d-flex justify-content-between align-items-center">
@@ -16,13 +13,13 @@ const FanficCard = ({ fanficData, userRate, onShowEditForm, onDeleteFanfic, onRa
           Author: <Link to={`/profile/${fanficData.user._id}`} >{fanficData.user.login}</Link>
         </span>
         <div className="d-flex">
-          <IconButton icon={<EditIcon />} onClick={onShowEditForm} />
-          <IconButton icon={<DeleteIcon />} type="danger" onClick={onDeleteFanfic} />
+          {buttons}
         </div>
       </Card.Header>
       <Card.Body>
         <Card.Title>{fanficData.name}</Card.Title>
         <Card.Text>{fanficData.description}</Card.Text>
+        <div><Fandom fandom={fanficData.fandom.name} /></div>
         <div>{fanficData.tags.map(tag => <Tag key={tag._id} value={tag.value} />)}</div>
       </Card.Body>
       <Card.Footer className="d-flex flex-column flex-sm-row justify-content-between">
