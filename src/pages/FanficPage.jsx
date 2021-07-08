@@ -11,13 +11,14 @@ import { createChapter } from "../actions/chapters";
 import Fanfic from "../containers/Fanfic";
 import ChaptersList from "../components/ChapersList";
 import ChapterForm from "../components/ChapterForm";
-import Chapter from "../containers/Chapter";
+import ChapterPage from "./ChapterPage";
 
 const FanficPage = () => {
   const { fanficId } = useParams();
   const { path } = useRouteMatch();
   const [activeChapter, setActiveChapter] = useState(null);
   const [showChapterForm, onShowChapterForm, onHideChapterForm] = useShowModal();
+  const userData = useSelector(state => state.user.data);
   const fanfic = useSelector(state => state.fanfics.find(fanfic => fanfic.data._id === fanficId));
   const fanficChapters = useFanficChapters(fanfic?.data?._id, fanfic?.status);
   const dispatch = useDispatch();
@@ -33,12 +34,12 @@ const FanficPage = () => {
 
   return (
     <div>
-      <Fanfic fanficId={fanficId} />
+      <Fanfic fanficId={fanficId} fanficPage={true} />
       <ChaptersList
         chapters={fanficChapters}
         activeChapter={activeChapter}
         onMoveChapter={handleMoveChapter}
-        onShowEditForm={onShowChapterForm}
+        onShowEditForm={userData?._id === fanfic?.data?.user?._id ? onShowChapterForm : null}
       />
       <ChapterForm
         showEditForm={showChapterForm}
@@ -47,7 +48,7 @@ const FanficPage = () => {
       />
       <Switch>
         <Route path={`${path}/:chapterNumber`}>
-          <Chapter
+          <ChapterPage
             fanficId={fanficId}
             chapterId={fanficChapters[activeChapter]?._id}
             chaptersLength={fanficChapters.length}

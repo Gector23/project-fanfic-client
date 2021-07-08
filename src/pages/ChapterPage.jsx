@@ -12,7 +12,7 @@ import ChapterCard from "../components/ChapterCard";
 import ChapterForm from "../components/ChapterForm";
 import Notice from "../components/Notice";
 
-const Chapter = ({ fanficId, chapterId, chaptersLength, onChapterChange }) => {
+const ChapterPage = ({ fanficId, chapterId, chaptersLength, onChapterChange }) => {
   const { chapterNumber } = useParams();
   const chapter = useSelector(state => state.chapters.find(chapter => chapter.data?._id === chapterId));
   const needUpdate = useNeedUpdate("chapter", chapterId, chapter?.data?.lastUpdate);
@@ -70,7 +70,7 @@ const Chapter = ({ fanficId, chapterId, chaptersLength, onChapterChange }) => {
           showEditForm={showEditForm}
           initialData={chapter.data}
           onHideEditForm={onHideEditForm}
-          onUpdateChapter={handleUpdateChapter}
+          onSetChapter={handleUpdateChapter}
         />
         <ChapterCard
           chapterData={chapter.data}
@@ -93,4 +93,4 @@ const Chapter = ({ fanficId, chapterId, chaptersLength, onChapterChange }) => {
   );
 };
 
-export default Chapter;
+export default ChapterPage;

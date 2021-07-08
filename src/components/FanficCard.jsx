@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { Card } from "react-bootstrap";
 
-import Rate from "../components/Rate";
-import Fandom from "../components/Fandom";
-import Tag from "../components/Tag";
+import Rate from "./Rate";
+import Fandom from "./Fandom";
+import Tag from "./Tag";
 
 const FanficCard = ({ fanficData, userRate, buttons, onRate }) => {
   return (

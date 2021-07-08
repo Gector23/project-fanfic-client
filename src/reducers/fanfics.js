@@ -1,12 +1,12 @@
 import cloneDeep from "lodash.clonedeep";
 
-import { FANFIC_FETCH, FANFIC_SUCCESS, FANFIC_FAILURE, REMOVE_FANFIC } from "../constants/fanfics";
+import * as fanficsContants from "../constants/fanfics";
 
 const fanfics = (state = [], action) => {
   let stateClone;
   let fanficIndex;
   switch (action.type) {
-    case FANFIC_FETCH:
+    case fanficsContants.FANFIC_FETCH:
       stateClone = cloneDeep(state);
       fanficIndex = stateClone.findIndex(fanfic => fanfic.data._id === action.payload.fanficId);
       if (~fanficIndex) {
@@ -22,18 +22,19 @@ const fanfics = (state = [], action) => {
       }
       return stateClone;
 
-    case FANFIC_SUCCESS:
+    case fanficsContants.FANFIC_SUCCESS:
       stateClone = cloneDeep(state);
       fanficIndex = stateClone.findIndex(fanfic => fanfic.data._id === action.payload.fanficId);
       stateClone[fanficIndex] = {
         status: "success",
         message: action.payload.message,
         data: action.payload.data,
-        userRate: action.payload.userRate
+        userRate: action.payload.userRate,
+        isFavorited: action.payload.isFavorited
       };
       return stateClone;
 
-    case FANFIC_FAILURE:
+    case fanficsContants.FANFIC_FAILURE:
       stateClone = cloneDeep(state);
       fanficIndex = stateClone.findIndex(fanfic => fanfic.data._id === action.payload.fanficId);
       stateClone[fanficIndex] = {
@@ -43,7 +44,13 @@ const fanfics = (state = [], action) => {
       };
       return stateClone;
 
-    case REMOVE_FANFIC:
+    case fanficsContants.FANFIC_TOGGLE_FAVORITE:
+      stateClone = cloneDeep(state);
+      fanficIndex = stateClone.findIndex(fanfic => fanfic.data._id === action.payload.fanficId);
+      stateClone[fanficIndex].isFavorited = stateClone[fanficIndex].isFavorited ? false : true;
+      return stateClone;
+
+    case fanficsContants.REMOVE_FANFIC:
       stateClone = cloneDeep(state);
       return stateClone.filter(fanfic => fanfic.data._id !== action.payload.fanficId);
 

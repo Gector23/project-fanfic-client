@@ -1,6 +1,6 @@
 import api from "../utils/api";
 
-import { FANFIC_FETCH, FANFIC_SUCCESS, FANFIC_FAILURE, REMOVE_FANFIC } from "../constants/fanfics";
+import { FANFIC_FETCH, FANFIC_SUCCESS, FANFIC_FAILURE, REMOVE_FANFIC, FANFIC_TOGGLE_FAVORITE } from "../constants/fanfics";
 import { REMOVE_PROFILE } from "../constants/profile";
 
 export const createFanfic = (fanficData, userId) => {
@@ -26,13 +26,14 @@ export const getFanfic = fanficId => {
   return async dispatch => {
     try {
       dispatch({ type: FANFIC_FETCH, payload: { fanficId } });
-      const fanficResponse = await api.get(`/fanfic/${fanficId}`);
+      const response = await api.get(`/fanfic/${fanficId}`);
       dispatch({
         type: FANFIC_SUCCESS, payload: {
           fanficId,
-          message: fanficResponse.data.message,
-          data: fanficResponse.data.fanfic.data,
-          userRate: fanficResponse.data.fanfic.userRate
+          message: response.data.message,
+          data: response.data.fanfic.data,
+          userRate: response.data.fanfic.userRate,
+          isFavorited: response.data.fanfic.isFavorited
         }
       });
     } catch (err) {
@@ -67,6 +68,25 @@ export const setFanficRate = (fanficId, value) => {
       await api.post(`/fanfic/${fanficId}/rate`, { value });
       dispatch({
         type: REMOVE_FANFIC, payload: {
+          fanficId
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+export const toggleFanficFavorite = (fanficId, isFavorited) => {
+  return async dispatch => {
+    try {
+      isFavorited ? (
+        await api.get(`/fanfic/${fanficId}/remove-favorite`)
+      ) : (
+        await api.get(`/fanfic/${fanficId}/set-favorite`)
+      )
+      dispatch({
+        type: FANFIC_TOGGLE_FAVORITE, payload: {
           fanficId
         }
       });
