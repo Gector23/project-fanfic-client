@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
-import { useSelector } from "react-redux";
 import Tags from "@yaireo/tagify/dist/react.tagify";
+
+import useTags from "../hooks/useTags";
 
 const settings = {
   maxTags: 5,
@@ -11,7 +12,7 @@ const settings = {
 };
 
 const TagField = forwardRef(({ initialTags }, ref) => {
-  const tags = useSelector(state => state.tags);
+  const tags = useTags();
   
   return (
     <Tags

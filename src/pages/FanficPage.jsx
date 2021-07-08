@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import useFanficChapters from "../hooks/useFanficChapters";
 import useShowModal from "../hooks/useShowModal";
+import useRelation from "../hooks/useRelation";
 
 import { moveChapter } from "../actions/fanfics";
 import { createChapter } from "../actions/chapters";
@@ -18,9 +19,9 @@ const FanficPage = () => {
   const { path } = useRouteMatch();
   const [activeChapter, setActiveChapter] = useState(null);
   const [showChapterForm, onShowChapterForm, onHideChapterForm] = useShowModal();
-  const userData = useSelector(state => state.user.data);
   const fanfic = useSelector(state => state.fanfics.find(fanfic => fanfic.data._id === fanficId));
   const fanficChapters = useFanficChapters(fanfic?.data?._id, fanfic?.status);
+  const { hasAccess } = useRelation(fanfic?.data?.user?._id);
   const dispatch = useDispatch();
 
   const handleMoveChapter = (chapterId, number) => {
@@ -39,7 +40,7 @@ const FanficPage = () => {
         chapters={fanficChapters}
         activeChapter={activeChapter}
         onMoveChapter={handleMoveChapter}
-        onShowEditForm={userData?._id === fanfic?.data?.user?._id ? onShowChapterForm : null}
+        onShowEditForm={hasAccess ? onShowChapterForm : null}
       />
       <ChapterForm
         showEditForm={showChapterForm}

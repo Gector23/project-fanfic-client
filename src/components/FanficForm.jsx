@@ -1,7 +1,8 @@
 import { useRef } from "react";
-import { useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Modal, Form, Button } from "react-bootstrap";
+
+import useFandoms from "../hooks/useFandoms";
 
 import TagField from "./TagField";
 
@@ -24,8 +25,7 @@ const defaultData = {
 
 const FanficForm = ({ showEditForm, initialData = defaultData, onHideEditForm, onSetFanfic }) => {
   const tagsRef = useRef();
-  const fandoms = useSelector(state => state.fandoms);
-
+  const fandoms = useFandoms();
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   const validationRules = {

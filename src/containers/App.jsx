@@ -3,7 +3,6 @@ import { useLocation, Switch, Route, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Container } from "react-bootstrap";
 
-import { initialAction } from "../actions/common";
 import { refresh } from "../actions/user";
 
 import Header from "./Header";
@@ -13,17 +12,13 @@ import ActivatePage from "../pages/ActivatePage";
 import FanficPage from "../pages/FanficPage";
 import ProfilePage from "../pages/ProfilePage";
 import NotActivated from "../components/NotActivated";
-import InitializePreferences from "./InitializePreferences";
+import SetPreferences from "./SetPreferences";
 import Spinner from "../components/Spinner";
 
 const App = () => {
   const location = useLocation();
-  const user = useSelector(state => state.user.data);
+  const userData = useSelector(state => state.user.data);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(initialAction(), { shouldHandleLoadingState: true });
-  }, [dispatch]);
 
   useEffect(() => {
     dispatch(refresh());
@@ -31,12 +26,12 @@ const App = () => {
 
   switch (location.pathname) {
     case "/sign-up":
-      if (user) {
+      if (userData) {
         return <Redirect to="/sign-in" />;
       }
       break;
     case "/sign-in":
-      if (user) {
+      if (userData) {
         return <Redirect to="/" />;
       }
       break;
@@ -46,10 +41,10 @@ const App = () => {
 
   return (
     <Container>
-      {user && !user.isActivated && location.pathname !== "/activate" ? (
-        <NotActivated userEmail={user.email} />
-      ) : user && !user.isInitializedPreferences && location.pathname !== "/activate" ? (
-        <InitializePreferences />
+      {userData && !userData.isActivated && location.pathname !== "/activate" ? (
+        <NotActivated userEmail={userData.email} />
+      ) : userData && !userData.isInitializedPreferences && location.pathname !== "/activate" ? (
+        <SetPreferences userId={userData._id} initial={true} />
       ) : (
         <>
           <Header />

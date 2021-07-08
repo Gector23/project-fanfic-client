@@ -1,6 +1,7 @@
 import api from "../utils/api";
 
 import * as userConstants from "../constants/user";
+import { REMOVE_PROFILE } from "../constants/profile";
 
 export const signUp = (email, login, password) => {
   return async dispatch => {
@@ -67,11 +68,14 @@ export const signOut = () => {
   };
 };
 
-export const setPreferences = (userId, preferences) => {
+export const setPreferences = (userId, preferences, intial) => {
   return async dispatch => {
     try {
       await api.put(`/user/${userId}/preferences`, { fandoms: preferences });
-      dispatch({ type: userConstants.SET_PREFERENCES, payload: { preferences } });
+      dispatch({ type: REMOVE_PROFILE, payload: { userId } });
+      if (intial) {
+        dispatch({ type: userConstants.INITIALIZEDPREFERENCES });
+      }
     } catch (err) {
       console.log(err);
     }

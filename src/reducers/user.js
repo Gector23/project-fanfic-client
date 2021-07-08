@@ -26,15 +26,13 @@ const user = (state = {}, action) => {
 
     case userConstants.ACTIVATED:
       stateClone = cloneDeep(state);
+      console.log(JSON.stringify(stateClone));
       stateClone.data.isActivated = true;
       return stateClone;
 
-    case userConstants.SET_PREFERENCES:
+    case userConstants.INITIALIZEDPREFERENCES:
       stateClone = cloneDeep(state);
-      stateClone.data.preferences = action.payload.preferences;
-      if (!stateClone.data.isInitializedPreferences) {
-        stateClone.data.isInitializedPreferences = true;
-      }
+      stateClone.data.isInitializedPreferences = true;
       return stateClone;
 
     default:

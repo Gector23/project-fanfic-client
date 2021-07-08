@@ -10,9 +10,9 @@ const useActivateUser = activationLink => {
         const response = await api.get("/auth/activate", {
           params: { activationLink }
         });
-        setActivation({status: "success", message: response.data.message});
+        setActivation({ status: "success", message: response.data.message });
       } catch (err) {
-        setActivation({status: "failure", message: err.response.data.message});
+        setActivation({ status: "failure", message: err.response.data.message });
       }
     };
     fetchActivation();
