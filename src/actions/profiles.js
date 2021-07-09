@@ -24,26 +24,3 @@ export const getProfile = userId => {
     }
   };
 };
-
-export const getProfileFanfics = userId => {
-  return async dispatch => {
-    try {
-      dispatch({ type: profileConstans.PROFILE_FANFICS_FETCH, payload: { userId } });
-      const response = await api.get(`/user/${userId}/fanfics`);
-      dispatch({
-        type: profileConstans.PROFILE_FANFICS_SUCCESS, payload: {
-          userId,
-          message: response.data.message,
-          data: response.data.fanfics
-        }
-      });
-    } catch (err) {
-      dispatch({
-        type: profileConstans.PROFILE_FANFICS_FAILURE, payload: {
-          userId,
-          message: err.response.data.message
-        }
-      });
-    }
-  };
-};

@@ -1,7 +1,7 @@
 import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
 import { Nav } from "react-bootstrap";
 
-const ProfileNavigation = () => {
+const ProfileNavigation = ({ editAccess }) => {
   const { url } = useRouteMatch();
   const history = useHistory();
   const activeLink = useLocation().pathname.split("/").pop();
@@ -26,15 +26,17 @@ const ProfileNavigation = () => {
           Favorites
         </Nav.Link>
       </Nav.Item>
-      <Nav.Item>
-        <Nav.Link
-          eventKey="edit"
-          active={activeLink === "edit"}
-          onClick={() => history.push(`${url}/edit`)}
-        >
-          Edit
-        </Nav.Link>
-      </Nav.Item>
+      {editAccess && (
+        <Nav.Item>
+          <Nav.Link
+            eventKey="edit"
+            active={activeLink === "edit"}
+            onClick={() => history.push(`${url}/edit`)}
+          >
+            Edit
+          </Nav.Link>
+        </Nav.Item>
+      )}
     </Nav>
   );
 };

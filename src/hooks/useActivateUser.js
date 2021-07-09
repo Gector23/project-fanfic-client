@@ -5,17 +5,23 @@ import api from "../utils/api";
 const useActivateUser = activationLink => {
   const [activation, setActivation] = useState({ status: "fetch" });
   useEffect(() => {
+    let cleanupFunction = false;
     const fetchActivation = async () => {
       try {
         const response = await api.get("/auth/activate", {
           params: { activationLink }
         });
-        setActivation({ status: "success", message: response.data.message });
+        if (!cleanupFunction) {
+          setActivation({ status: "success", message: response.data.message });
+        };
       } catch (err) {
-        setActivation({ status: "failure", message: err.response.data.message });
+        if (!cleanupFunction) {
+          setActivation({ status: "failure", message: err.response.data.message });
+        };
       }
     };
     fetchActivation();
+    return () => cleanupFunction = true;
   }, [activationLink]);
   return activation;
 };

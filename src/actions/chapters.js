@@ -1,15 +1,15 @@
 import api from "../utils/api";
 
-import { CHAPTER_FETCH, CHAPTER_SUCCESS, CHAPTER_FAILURE, REMOVE_CHAPTER } from "../constants/chapters";
+import * as chaptersConstants from "../constants/chapters";
 import { REMOVE_FANFIC } from "../constants/fanfics";
 
 export const getChapter = chapterId => {
   return async dispatch => {
     try {
-      dispatch({ type: CHAPTER_FETCH, payload: { chapterId } });
+      dispatch({ type: chaptersConstants.CHAPTER_FETCH, payload: { chapterId } });
       const chapterResponse = await api.get(`/chapter/${chapterId}`);
       dispatch({
-        type: CHAPTER_SUCCESS, payload: {
+        type: chaptersConstants.CHAPTER_SUCCESS, payload: {
           chapterId,
           message: chapterResponse.data.message,
           data: chapterResponse.data.chapter,
@@ -18,7 +18,7 @@ export const getChapter = chapterId => {
       });
     } catch (err) {
       dispatch({
-        type: CHAPTER_FAILURE, payload: {
+        type: chaptersConstants.CHAPTER_FAILURE, payload: {
           chapterId,
           message: err.response.data.message
         }
@@ -37,7 +37,7 @@ export const createChapter = (chapterData, fanficId) => {
         }
       });
       dispatch({
-        type: CHAPTER_SUCCESS, payload: {
+        type: chaptersConstants.CHAPTER_SUCCESS, payload: {
           chapterId: response.data.chapter._id,
           message: response.data.message,
           data: response.data.fanfic,
@@ -60,7 +60,7 @@ export const updateChapter = (fanficId, chapterId, update) => {
         }
       });
       dispatch({
-        type: REMOVE_CHAPTER, payload: {
+        type: chaptersConstants.REMOVE_CHAPTER, payload: {
           chapterId
         }
       });
@@ -79,7 +79,7 @@ export const toggleChapterLike = (chapterId, isLiked) => {
         await api.get(`/chapter/${chapterId}/like`)
       )
       dispatch({
-        type: REMOVE_CHAPTER, payload: {
+        type: chaptersConstants.TOGGLE_CHAPTER_LIKE, payload: {
           chapterId
         }
       });
@@ -99,7 +99,7 @@ export const deleteChapter = (fanficId, chapterId) => {
         }
       });
       dispatch({
-        type: REMOVE_CHAPTER, payload: {
+        type: chaptersConstants.REMOVE_CHAPTER, payload: {
           chapterId
         }
       });

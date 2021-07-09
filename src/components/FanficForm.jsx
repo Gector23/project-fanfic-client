@@ -23,7 +23,7 @@ const defaultData = {
   default: true
 };
 
-const FanficForm = ({ showEditForm, initialData = defaultData, onHideEditForm, onSetFanfic }) => {
+const FanficForm = ({ initialData = defaultData, onHideEditForm, onSetFanfic }) => {
   const tagsRef = useRef();
   const fandoms = useFandoms();
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -32,14 +32,12 @@ const FanficForm = ({ showEditForm, initialData = defaultData, onHideEditForm, o
     name: {
       required: { value: true, message: "Fanfic name is required" },
       minLength: { value: 10, message: "Fanfic name min length is 10" },
-      maxLength: { value: 80, message: "Fanfic name max length is 80" },
-      value: initialData.name
+      maxLength: { value: 80, message: "Fanfic name max length is 80" }
     },
     description: {
       required: { value: true, message: "Description is required" },
       minLength: { value: 20, message: "Description min length is 20" },
-      maxLength: { value: 80, message: "Description max length is 80" },
-      value: initialData.description
+      maxLength: { value: 80, message: "Description max length is 80" }
     },
     fandom: {
       required: { value: true, message: "Fandom is required" }
@@ -70,7 +68,7 @@ const FanficForm = ({ showEditForm, initialData = defaultData, onHideEditForm, o
   };
 
   return (
-    <Modal show={showEditForm} onHide={onHideEditForm} >
+    <Modal show={true} onHide={onHideEditForm} >
       <Modal.Body>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-3">
@@ -78,6 +76,7 @@ const FanficForm = ({ showEditForm, initialData = defaultData, onHideEditForm, o
               isInvalid={errors.name}
               type="text"
               placeholder="Fanfic name"
+              defaultValue={initialData.name}
               {...register("name", { ...validationRules.name })}
             />
             <Form.Control.Feedback type="invalid">
@@ -89,6 +88,7 @@ const FanficForm = ({ showEditForm, initialData = defaultData, onHideEditForm, o
               isInvalid={errors.description}
               as="textarea"
               placeholder="Fanfic description"
+              defaultValue={initialData.description}
               rows={3}
               {...register("description", { ...validationRules.description })}
             />
@@ -96,21 +96,23 @@ const FanficForm = ({ showEditForm, initialData = defaultData, onHideEditForm, o
               {errors.description?.message}
             </Form.Control.Feedback>
           </div>
-          <div className="mb-3">
-            <Form.Control
-              as="select"
-              isInvalid={errors.fandom}
-              {...register("fandom", { ...validationRules.fandom })}
-            >
-              {fandoms.map(fandom => {
-                const selected = fandom._id === initialData.fandom?._id;
-                return <option key={fandom._id} defaultValue={selected} value={fandom._id}>{fandom.name}</option>
-              })}
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">
-              {errors.fandom?.message}
-            </Form.Control.Feedback>
-          </div>
+          {fandoms.length && (
+            <div className="mb-3">
+              <Form.Control
+                as="select"
+                isInvalid={errors.fandom}
+                defaultValue={initialData.fandom?._id}
+                {...register("fandom", { ...validationRules.fandom })}
+              >
+                {fandoms.map(fandom => {
+                  return <option key={fandom._id} value={fandom._id}>{fandom.name}</option>
+                })}
+              </Form.Control>
+              <Form.Control.Feedback type="invalid">
+                {errors.fandom?.message}
+              </Form.Control.Feedback>
+            </div>
+          )}
           <div className="mb-3">
             <TagField ref={tagsRef} initialTags={initialData.tags} />
           </div>

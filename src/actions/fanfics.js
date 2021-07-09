@@ -1,6 +1,6 @@
 import api from "../utils/api";
 
-import { FANFIC_FETCH, FANFIC_SUCCESS, FANFIC_FAILURE, REMOVE_FANFIC, FANFIC_TOGGLE_FAVORITE } from "../constants/fanfics";
+import * as fanficsConstants from "../constants/fanfics";
 import { REMOVE_PROFILE } from "../constants/profile";
 
 export const createFanfic = (fanficData, userId) => {
@@ -8,14 +8,14 @@ export const createFanfic = (fanficData, userId) => {
     try {
       const response = await api.post("/fanfic/create", fanficData);
       dispatch({
-        type: FANFIC_SUCCESS, payload: {
+        type: fanficsConstants.FANFIC_SUCCESS, payload: {
           fanficId: response.data.fanfic._id,
           message: response.data.message,
           data: response.data.fanfic,
           userRate: response.data.userRate
         }
       });
-      dispatch({ type: REMOVE_PROFILE, payload: { userId } })
+      dispatch({ type: REMOVE_PROFILE, payload: { userId } });
     } catch (err) {
       console.log(err);
     }
@@ -25,10 +25,10 @@ export const createFanfic = (fanficData, userId) => {
 export const getFanfic = fanficId => {
   return async dispatch => {
     try {
-      dispatch({ type: FANFIC_FETCH, payload: { fanficId } });
+      dispatch({ type: fanficsConstants.FANFIC_FETCH, payload: { fanficId } });
       const response = await api.get(`/fanfic/${fanficId}`);
       dispatch({
-        type: FANFIC_SUCCESS, payload: {
+        type: fanficsConstants.FANFIC_SUCCESS, payload: {
           fanficId,
           message: response.data.message,
           data: response.data.fanfic.data,
@@ -38,7 +38,7 @@ export const getFanfic = fanficId => {
       });
     } catch (err) {
       dispatch({
-        type: FANFIC_FAILURE, payload: {
+        type: fanficsConstants.FANFIC_FAILURE, payload: {
           fanficId,
           message: err.response.data.message
         }
@@ -47,12 +47,15 @@ export const getFanfic = fanficId => {
   };
 };
 
-export const updateFanfic = (fanficId, update) => {
+export const updateFanfic = (fanficId, update, userId) => {
   return async dispatch => {
     try {
       await api.patch(`/fanfic/update/${fanficId}`, update);
+      if (userId) {
+        dispatch({ type: REMOVE_PROFILE, payload: { userId } });
+      }
       dispatch({
-        type: REMOVE_FANFIC, payload: {
+        type: fanficsConstants.REMOVE_FANFIC, payload: {
           fanficId
         }
       });
@@ -62,12 +65,15 @@ export const updateFanfic = (fanficId, update) => {
   };
 };
 
-export const setFanficRate = (fanficId, value) => {
+export const setFanficRate = (fanficId, value, userId) => {
   return async dispatch => {
     try {
       await api.post(`/fanfic/${fanficId}/rate`, { value });
+      if (userId) {
+        dispatch({ type: REMOVE_PROFILE, payload: { userId } });
+      }
       dispatch({
-        type: REMOVE_FANFIC, payload: {
+        type: fanficsConstants.REMOVE_FANFIC, payload: {
           fanficId
         }
       });
@@ -77,7 +83,7 @@ export const setFanficRate = (fanficId, value) => {
   };
 };
 
-export const toggleFanficFavorite = (fanficId, isFavorited) => {
+export const toggleFanficFavorite = (fanficId, isFavorited, userId) => {
   return async dispatch => {
     try {
       isFavorited ? (
@@ -85,8 +91,9 @@ export const toggleFanficFavorite = (fanficId, isFavorited) => {
       ) : (
         await api.get(`/fanfic/${fanficId}/set-favorite`)
       )
+      dispatch({ type: REMOVE_PROFILE, payload: { userId } });
       dispatch({
-        type: FANFIC_TOGGLE_FAVORITE, payload: {
+        type: fanficsConstants.FANFIC_TOGGLE_FAVORITE, payload: {
           fanficId
         }
       });
@@ -96,12 +103,15 @@ export const toggleFanficFavorite = (fanficId, isFavorited) => {
   };
 };
 
-export const deleteFanfic = fanficId => {
+export const deleteFanfic = (fanficId, userId) => {
   return async dispatch => {
     try {
       await api.delete(`/fanfic/${fanficId}`);
+      if (userId) {
+        dispatch({ type: REMOVE_PROFILE, payload: { userId } });
+      }
       dispatch({
-        type: REMOVE_FANFIC, payload: {
+        type: fanficsConstants.REMOVE_FANFIC, payload: {
           fanficId
         }
       });
@@ -116,7 +126,7 @@ export const moveChapter = (fanficId, chapterId, number) => {
     try {
       await api.patch(`/chapter/move/${chapterId}`, { number });
       dispatch({
-        type: REMOVE_FANFIC, payload: {
+        type: fanficsConstants.REMOVE_FANFIC, payload: {
           fanficId
         }
       });

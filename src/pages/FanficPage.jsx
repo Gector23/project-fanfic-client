@@ -35,7 +35,7 @@ const FanficPage = () => {
 
   return (
     <div>
-      <Fanfic fanficId={fanficId} fanficPage={true} />
+      <Fanfic fanficId={fanficId} readIcon={false} controlIcons={true} />
       <ChaptersList
         chapters={fanficChapters}
         activeChapter={activeChapter}

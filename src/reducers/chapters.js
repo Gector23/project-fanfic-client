@@ -1,12 +1,12 @@
 import cloneDeep from "lodash.clonedeep";
 
-import { CHAPTER_FETCH, CHAPTER_SUCCESS, CHAPTER_FAILURE, REMOVE_CHAPTER } from "../constants/chapters";
+import * as chaptersConstants from "../constants/chapters";
 
 const chapters = (state = [], action) => {
   let stateClone;
   let chapterIndex;
   switch (action.type) {
-    case CHAPTER_FETCH:
+    case chaptersConstants.CHAPTER_FETCH:
       stateClone = cloneDeep(state);
       chapterIndex = stateClone.findIndex(chapter => chapter.data._id === action.payload.chapterId);
       if (~chapterIndex) {
@@ -22,7 +22,7 @@ const chapters = (state = [], action) => {
       }
       return stateClone;
 
-    case CHAPTER_SUCCESS:
+    case chaptersConstants.CHAPTER_SUCCESS:
       stateClone = cloneDeep(state);
       chapterIndex = stateClone.findIndex(chapter => chapter.data._id === action.payload.chapterId);
       stateClone[chapterIndex] = {
@@ -33,7 +33,7 @@ const chapters = (state = [], action) => {
       };
       return stateClone;
 
-    case CHAPTER_FAILURE:
+    case chaptersConstants.CHAPTER_FAILURE:
       stateClone = cloneDeep(state);
       chapterIndex = stateClone.findIndex(chapter => chapter.data._id === action.payload.chapterId);
       stateClone[chapterIndex] = {
@@ -43,7 +43,19 @@ const chapters = (state = [], action) => {
       };
       return stateClone;
 
-    case REMOVE_CHAPTER:
+    case chaptersConstants.TOGGLE_CHAPTER_LIKE:
+      stateClone = cloneDeep(state);
+      chapterIndex = stateClone.findIndex(chapter => chapter.data._id === action.payload.chapterId);
+      if (stateClone[chapterIndex].isLiked) {
+        stateClone[chapterIndex].isLiked = false;
+        stateClone[chapterIndex].data.likesCount--;
+      } else {
+        stateClone[chapterIndex].isLiked = true;
+        stateClone[chapterIndex].data.likesCount++;
+      }
+      return stateClone;
+
+    case chaptersConstants.REMOVE_CHAPTER:
       stateClone = cloneDeep(state);
       return stateClone.filter(chapter => chapter.data._id !== action.payload.chapterId);
 

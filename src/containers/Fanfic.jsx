@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import useNeedUpdate from "../hooks/useNeedUpdate";
 import useShowModal from "../hooks/useShowModal";
+import useRelation from "../hooks/useRelation";
 
 import { getFanfic, updateFanfic, deleteFanfic, toggleFanficFavorite, setFanficRate } from "../actions/fanfics";
 
@@ -18,10 +19,11 @@ import FanficForm from "../components/FanficForm";
 import IconButton from "../components/IconButton";
 import Notice from "../components/Notice";
 
-const Fanfic = ({ fanficId, fanficPage = false }) => {
+const Fanfic = ({ fanficId, profile, readIcon = true, controlIcons = false }) => {
   const [showFanficForm, onShowFanficForm, onHideFanficForm] = useShowModal();
-  const userData = useSelector(state => state.user.data);
   const fanfic = useSelector(state => state.fanfics.find(fanfic => fanfic.data._id === fanficId));
+  const { isSignedIn, isOwner, hasAccess } = useRelation(fanfic?.data?.user?._id);
+  const userId = useSelector(state => isSignedIn ? state.user.data._id : null);
   const needUpdate = useNeedUpdate("fanfic", fanficId, fanfic?.data?.lastUpdate);
   const history = useHistory();
   const dispatch = useDispatch();
@@ -33,61 +35,61 @@ const Fanfic = ({ fanficId, fanficPage = false }) => {
   }, [dispatch, fanficId, fanfic, needUpdate]);
 
   const handleUpdateFanfic = update => {
-    dispatch(updateFanfic(fanficId, update));
+    dispatch(updateFanfic(fanficId, update, profile));
     onHideFanficForm();
   };
 
   const handleDeleteFanfic = useCallback(() => {
-    dispatch(deleteFanfic(fanficId));
-  }, [dispatch, fanficId]);
+    dispatch(deleteFanfic(fanficId, profile));
+  }, [dispatch, fanficId, profile]);
 
   const handleFavoriteClick = useCallback(() => {
-    dispatch(toggleFanficFavorite(fanficId, fanfic.isFavorited));
-  }, [dispatch, fanficId, fanfic?.isFavorited]);
+    dispatch(toggleFanficFavorite(fanficId, fanfic.isFavorited, userId));
+  }, [dispatch, fanficId, fanfic?.isFavorited, userId]);
 
   const handleRate = value => {
-    dispatch(setFanficRate(fanficId, value));
+    dispatch(setFanficRate(fanficId, value, profile));
   };
 
   let fanficCardButtons = [];
 
-  if (!fanficPage) {
+  if (readIcon) {
     const readModeIcon = <IconButton
       key="readModeIcon"
       icon={<ReadModeIcon />}
       onClick={() => history.push(`/fanfic/${fanficId}`)}
     />;
     fanficCardButtons.push(readModeIcon);
-  } else {
-    if (userData?._id === fanfic?.data?.user?._id) {
-      const editButton = <IconButton key="editIcon" icon={<EditIcon />} onClick={onShowFanficForm} />;
-      const deleteButton = <IconButton
-        key="deleteIcon"
-        icon={<DeleteIcon />}
-        type="danger"
-        onClick={handleDeleteFanfic}
-      />;
-      fanficCardButtons.push(editButton, deleteButton);
-    }
+  }
 
-    if (userData && userData?._id !== fanfic?.data?.user?._id) {
-      const addFavorireIcon = <IconButton
-        key="addFavorireIcon"
-        icon={<AddFavorireIcon />}
-        type="warning"
-        onClick={handleFavoriteClick}
-      />;
-      const removeFavorireIcon = <IconButton
-        key="removeFavorireIcon"
-        icon={<RemoveFavorireIcon />}
-        type="secondary"
-        onClick={handleFavoriteClick}
-      />;
-      if (fanfic?.isFavorited) {
-        fanficCardButtons.push(removeFavorireIcon);
-      } else {
-        fanficCardButtons.push(addFavorireIcon);
-      }
+  if (hasAccess && controlIcons) {
+    const editButton = <IconButton key="editIcon" icon={<EditIcon />} onClick={onShowFanficForm} />;
+    const deleteButton = <IconButton
+      key="deleteIcon"
+      icon={<DeleteIcon />}
+      type="danger"
+      onClick={handleDeleteFanfic}
+    />;
+    fanficCardButtons.push(editButton, deleteButton);
+  }
+
+  if (isSignedIn && !isOwner) {
+    const addFavorireIcon = <IconButton
+      key="addFavorireIcon"
+      icon={<AddFavorireIcon />}
+      type="warning"
+      onClick={handleFavoriteClick}
+    />;
+    const removeFavorireIcon = <IconButton
+      key="removeFavorireIcon"
+      icon={<RemoveFavorireIcon />}
+      type="secondary"
+      onClick={handleFavoriteClick}
+    />;
+    if (fanfic?.isFavorited) {
+      fanficCardButtons.push(removeFavorireIcon);
+    } else {
+      fanficCardButtons.push(addFavorireIcon);
     }
   }
 
@@ -100,12 +102,13 @@ const Fanfic = ({ fanficId, fanficPage = false }) => {
           buttons={fanficCardButtons}
           onRate={handleRate}
         />
-        <FanficForm
-          showEditForm={showFanficForm}
-          initialData={fanfic.data}
-          onHideEditForm={onHideFanficForm}
-          onSetFanfic={handleUpdateFanfic}
-        />
+        {showFanficForm && (
+          <FanficForm
+            initialData={fanfic.data}
+            onHideEditForm={onHideFanficForm}
+            onSetFanfic={handleUpdateFanfic}
+          />
+        )}
       </div>
     ) : (
       <Notice message={fanfic.message} type="danger" />

@@ -13,8 +13,7 @@ const ChapterForm = ({ showEditForm, initialData = defaultData, onHideEditForm, 
     name: {
       required: { value: true, message: "Chapter name is required" },
       minLength: { value: 10, message: "Chapter name min length is 10" },
-      maxLength: { value: 80, message: "Chapter name max length is 80" },
-      value: initialData.name
+      maxLength: { value: 80, message: "Chapter name max length is 80" }
     }
   };
 
@@ -35,6 +34,7 @@ const ChapterForm = ({ showEditForm, initialData = defaultData, onHideEditForm, 
               isInvalid={errors.name}
               type="text"
               placeholder="Chapter name"
+              defaultValue={initialData.name}
               {...register("name", { ...validationRules.name })}
             />
             <Form.Control.Feedback type="invalid">

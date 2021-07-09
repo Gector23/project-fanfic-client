@@ -2,7 +2,7 @@ import { Badge } from "react-bootstrap";
 
 const Fandom = ({ fandom }) => {
   return (
-    <Badge variant="primary">{fandom}</Badge>
+    <Badge className="mr-1" variant="primary">{fandom}</Badge>
   );
 };
 

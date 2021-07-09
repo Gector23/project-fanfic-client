@@ -5,15 +5,19 @@ import api from "../utils/api";
 const useFandoms = () => {
   const [fandoms, setFandoms] = useState([]);
   useEffect(() => {
+    let cleanupFunction = false;
     const fetchFandoms = async () => {
       try {
         const response = await api.get("/fandom");
-        setFandoms(response.data.fandoms);
+        if (!cleanupFunction) {
+          setFandoms(response.data.fandoms);
+        };
       } catch (err) {
-        setFandoms([]);
+        console.log(err);
       }
     };
     fetchFandoms();
+    return () => cleanupFunction = true;
   }, []);
   return fandoms;
 };

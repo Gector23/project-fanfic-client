@@ -40,8 +40,8 @@ const ProfilePage = () => {
     !profile || profile?.status === "fetch" ? null : profile.status === "success" ? (
       <>
         <ProfileCard profileData={profile.data} />
-        <ProfileNavigation />
-        <FanficForm showEditForm={showEditForm} onHideEditForm={onHideEditForm} onSetFanfic={handleCreateFanfic} />
+        <ProfileNavigation editAccess={hasAccess} />
+        {showEditForm && <FanficForm onHideEditForm={onHideEditForm} onSetFanfic={handleCreateFanfic} />}
         <Switch>
           <Route exact path={`${path}/fanfics`}>
             <ProfileFanfics
