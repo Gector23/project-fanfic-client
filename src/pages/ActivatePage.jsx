@@ -15,7 +15,7 @@ const ActivatePage = () => {
         heading="Thank You!"
         message={activation.message}
         type="success"
-        link={<Link className="btn btn-link" to="../" replace >Head to main</Link>} />
+        link={<Link className="btn btn-link" to="../main" replace >Head to main</Link>} />
     ) : (
       <Notice message={activation.message} type="danger" />
     )

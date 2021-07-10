@@ -12,27 +12,27 @@ const SortPanel = ({ sort, filter, onSortChange, onFilterChange }) => {
     <div className="d-flex flex-column flex-md-row justify-content-between mb-2">
       <Button
         className="mb-1 mb-md-0"
-        variant={sort.type !== "name" ? "outline-primary" : "primary"}
+        variant={sort.sortField !== "name" ? "outline-primary" : "primary"}
         onClick={() => onSortChange("name")}
       >
         Name
-        {sort.type !== "name" ? <DownArrowIcon /> : sort.direction ? <DownArrowIcon /> : <UpArrowIcon />}
+        {sort.sortField !== "name" ? <DownArrowIcon /> : sort.direction ? <DownArrowIcon /> : <UpArrowIcon />}
       </Button>
       <Button
         className="mb-1 mb-md-0"
-        variant={sort.type !== "lastUpdate" ? "outline-primary" : "primary"}
+        variant={sort.sortField !== "lastUpdate" ? "outline-primary" : "primary"}
         onClick={() => onSortChange("lastUpdate")}
       >
         Update Date
-        {sort.type !== "lastUpdate" ? <DownArrowIcon /> : sort.direction ? <DownArrowIcon /> : <UpArrowIcon />}
+        {sort.sortField !== "lastUpdate" ? <DownArrowIcon /> : sort.direction ? <DownArrowIcon /> : <UpArrowIcon />}
       </Button>
       <Button
         className="mb-1 mb-md-0"
-        variant={sort.type !== "rating" ? "outline-primary" : "primary"}
+        variant={sort.sortField !== "rating" ? "outline-primary" : "primary"}
         onClick={() => onSortChange("rating")}
       >
         Rating
-        {sort.type !== "rating" ? <DownArrowIcon /> : sort.direction ? <DownArrowIcon /> : <UpArrowIcon />}
+        {sort.sortField !== "rating" ? <DownArrowIcon /> : sort.direction ? <DownArrowIcon /> : <UpArrowIcon />}
       </Button>
       <DropdownButton title="Fandom" variant="outline-primary">
         <Dropdown.Item

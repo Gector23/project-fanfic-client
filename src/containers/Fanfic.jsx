@@ -2,7 +2,7 @@ import { useEffect, useCallback } from "react";
 import { useHistory } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 
-import useNeedUpdate from "../hooks/useNeedUpdate";
+import useLastUpdate from "../hooks/useLastUpdate";
 import useShowModal from "../hooks/useShowModal";
 import useRelation from "../hooks/useRelation";
 
@@ -19,36 +19,35 @@ import FanficForm from "../components/FanficForm";
 import IconButton from "../components/IconButton";
 import Notice from "../components/Notice";
 
-const Fanfic = ({ fanficId, profile, readIcon = true, controlIcons = false }) => {
+const Fanfic = ({ fanficId, readIcon = true, controlIcons = false }) => {
   const [showFanficForm, onShowFanficForm, onHideFanficForm] = useShowModal();
   const fanfic = useSelector(state => state.fanfics.find(fanfic => fanfic.data._id === fanficId));
   const { isSignedIn, isOwner, hasAccess } = useRelation(fanfic?.data?.user?._id);
-  const userId = useSelector(state => isSignedIn ? state.user.data._id : null);
-  const needUpdate = useNeedUpdate("fanfic", fanficId, fanfic?.data?.lastUpdate);
+  const lastUpdate = useLastUpdate("fanfic", fanfic?.data?._id);
   const history = useHistory();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!fanfic || (fanfic.status === "success" && needUpdate)) {
+    if (!fanfic || (fanfic.status === "success" && lastUpdate && fanfic.data.lastUpdate !== lastUpdate)) {
       dispatch(getFanfic(fanficId));
     }
-  }, [dispatch, fanficId, fanfic, needUpdate]);
+  }, [dispatch, fanficId, fanfic, lastUpdate]);
 
   const handleUpdateFanfic = update => {
-    dispatch(updateFanfic(fanficId, update, profile));
+    dispatch(updateFanfic(fanficId, update));
     onHideFanficForm();
   };
 
   const handleDeleteFanfic = useCallback(() => {
-    dispatch(deleteFanfic(fanficId, profile));
-  }, [dispatch, fanficId, profile]);
+    dispatch(deleteFanfic(fanficId));
+  }, [dispatch, fanficId]);
 
   const handleFavoriteClick = useCallback(() => {
-    dispatch(toggleFanficFavorite(fanficId, fanfic.isFavorited, userId));
-  }, [dispatch, fanficId, fanfic?.isFavorited, userId]);
+    dispatch(toggleFanficFavorite(fanficId, fanfic.isFavorited));
+  }, [dispatch, fanficId, fanfic?.isFavorited]);
 
   const handleRate = value => {
-    dispatch(setFanficRate(fanficId, value, profile));
+    dispatch(setFanficRate(fanficId, value));
   };
 
   let fanficCardButtons = [];

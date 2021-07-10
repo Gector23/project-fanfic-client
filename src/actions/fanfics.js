@@ -47,13 +47,10 @@ export const getFanfic = fanficId => {
   };
 };
 
-export const updateFanfic = (fanficId, update, userId) => {
+export const updateFanfic = (fanficId, update) => {
   return async dispatch => {
     try {
       await api.patch(`/fanfic/update/${fanficId}`, update);
-      if (userId) {
-        dispatch({ type: REMOVE_PROFILE, payload: { userId } });
-      }
       dispatch({
         type: fanficsConstants.REMOVE_FANFIC, payload: {
           fanficId
@@ -65,13 +62,10 @@ export const updateFanfic = (fanficId, update, userId) => {
   };
 };
 
-export const setFanficRate = (fanficId, value, userId) => {
+export const setFanficRate = (fanficId, value) => {
   return async dispatch => {
     try {
       await api.post(`/fanfic/${fanficId}/rate`, { value });
-      if (userId) {
-        dispatch({ type: REMOVE_PROFILE, payload: { userId } });
-      }
       dispatch({
         type: fanficsConstants.REMOVE_FANFIC, payload: {
           fanficId
@@ -83,7 +77,7 @@ export const setFanficRate = (fanficId, value, userId) => {
   };
 };
 
-export const toggleFanficFavorite = (fanficId, isFavorited, userId) => {
+export const toggleFanficFavorite = (fanficId, isFavorited) => {
   return async dispatch => {
     try {
       isFavorited ? (
@@ -91,7 +85,6 @@ export const toggleFanficFavorite = (fanficId, isFavorited, userId) => {
       ) : (
         await api.get(`/fanfic/${fanficId}/set-favorite`)
       )
-      dispatch({ type: REMOVE_PROFILE, payload: { userId } });
       dispatch({
         type: fanficsConstants.FANFIC_TOGGLE_FAVORITE, payload: {
           fanficId
@@ -103,13 +96,10 @@ export const toggleFanficFavorite = (fanficId, isFavorited, userId) => {
   };
 };
 
-export const deleteFanfic = (fanficId, userId) => {
+export const deleteFanfic = (fanficId) => {
   return async dispatch => {
     try {
       await api.delete(`/fanfic/${fanficId}`);
-      if (userId) {
-        dispatch({ type: REMOVE_PROFILE, payload: { userId } });
-      }
       dispatch({
         type: fanficsConstants.REMOVE_FANFIC, payload: {
           fanficId

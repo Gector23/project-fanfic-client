@@ -9,6 +9,7 @@ import Header from "./Header";
 import SignUpPage from "../pages/SignUpPage";
 import SignInPage from "../pages/SignInPage";
 import ActivatePage from "../pages/ActivatePage";
+import MainPage from "../pages/MainPage";
 import FanficPage from "../pages/FanficPage";
 import ProfilePage from "../pages/ProfilePage";
 import NotActivated from "../components/NotActivated";
@@ -32,7 +33,7 @@ const App = () => {
       break;
     case "/sign-in":
       if (userData) {
-        return <Redirect to="/" />;
+        return <Redirect to="/main" />;
       }
       break;
     default:
@@ -64,6 +65,12 @@ const App = () => {
             <Route path="/profile/:userId">
               <ProfilePage />
             </Route>
+            <Route path="/main">
+              <MainPage />
+            </Route>
+            <Route exact path="/">
+            <Redirect to={"/main"} />
+          </Route>
           </Switch>
           <Spinner />
         </>

@@ -1,24 +1,24 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouteMatch, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Pagination } from "react-bootstrap";
 
-import useNeedUpdate from "../hooks/useNeedUpdate";
+import useLastUpdate from "../hooks/useLastUpdate";
 import useShowModal from "../hooks/useShowModal";
 
 import { getChapter, updateChapter, deleteChapter, toggleChapterLike } from "../actions/chapters";
 
 import ChapterCard from "../components/ChapterCard";
 import ChapterForm from "../components/ChapterForm";
+import Pagination from "../components/Pagination";
 import Notice from "../components/Notice";
 
 const ChapterPage = ({ fanficId, chapterId, chaptersLength, onChapterChange }) => {
   const { chapterNumber } = useParams();
   const chapter = useSelector(state => state.chapters.find(chapter => chapter.data?._id === chapterId));
-  const needUpdate = useNeedUpdate("chapter", chapterId, chapter?.data?.lastUpdate);
+  const lastUpdate = useLastUpdate("chapter", chapter?.data?._id);
   const [mode, setMode] = useState("read");
   const [showEditForm, onShowEditForm, onHideEditForm] = useShowModal();
-  const { url } = useRouteMatch();
+  const { path } = useRouteMatch();
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -27,10 +27,10 @@ const ChapterPage = ({ fanficId, chapterId, chaptersLength, onChapterChange }) =
   }, [onChapterChange, chapterNumber]);
 
   useEffect(() => {
-    if ((!chapter || (chapter.status === "success" && needUpdate)) && chapterId) {
+    if (!chapter || (chapter.status === "success" && lastUpdate && chapter.data.lastUpdate !== lastUpdate)) {
       dispatch(getChapter(chapterId), { shouldHandleLoadingState: true });
     }
-  }, [dispatch, chapterId, chapter, needUpdate]);
+  }, [dispatch, chapterId, chapter, lastUpdate]);
 
   const handleToggleMode = () => {
     setMode(mode === "read" ? "edit" : "read");
@@ -49,12 +49,12 @@ const ChapterPage = ({ fanficId, chapterId, chaptersLength, onChapterChange }) =
     dispatch(toggleChapterLike(chapterId, chapter.isLiked));
   }, [dispatch, chapterId, chapter?.isLiked]);
 
-  const prevChapter = () => {
-    history.push(`${url}/${+chapterNumber - 1}`);
+  const handlePrevChapter = () => {
+    history.push(path.replace(/:fanficId/, fanficId).replace(/:chapterNumber/, +chapterNumber - 1));
   };
 
-  const nextChapter = () => {
-    history.push(`${url}/${+chapterNumber + 1}`);
+  const handleNextChapter = () => {
+    history.push(path.replace(/:fanficId/, fanficId).replace(/:chapterNumber/, +chapterNumber + 1));
   };
 
   if (!chapterId) {
@@ -82,10 +82,12 @@ const ChapterPage = ({ fanficId, chapterId, chaptersLength, onChapterChange }) =
           onDeleteChapter={handleDeleteChapter}
           onLikeClick={handleLikeClick}
         />
-        <Pagination className="d-flex justify-content-between">
-          <Pagination.Prev disabled={+chapterNumber === 1} onClick={prevChapter} />
-          <Pagination.Next disabled={+chapterNumber === chaptersLength} onClick={nextChapter} />
-        </Pagination>
+        <Pagination
+          prevDisabled={+chapterNumber === 1}
+          nextDisabled={+chapterNumber === chaptersLength}
+          onPrevClick={handlePrevChapter}
+          onNextClick={handleNextChapter}
+        />
       </>
     ) : (
       <Notice message={chapter.message} type="danger" />

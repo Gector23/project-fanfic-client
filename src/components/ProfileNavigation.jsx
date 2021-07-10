@@ -4,7 +4,7 @@ import { Nav } from "react-bootstrap";
 const ProfileNavigation = ({ editAccess }) => {
   const { url } = useRouteMatch();
   const history = useHistory();
-  const activeLink = useLocation().pathname.split("/").pop();
+  const activeLink = useLocation().pathname.split("/")[3];
 
   return (
     <Nav className="mb-5" variant="tabs">

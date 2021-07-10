@@ -29,7 +29,7 @@ const Header = () => {
             <Button className="my-2 my-sm-0" variant="outline-success" type="submite">Search</Button>
           </Form>
           <Nav>
-            <Link className="nav-link" to="/">Home</Link>
+            <Link className="nav-link" to="/main">Home</Link>
             {
               user ? (
                 <NavDropdown title={user.login} id="basic-nav-dropdown">
