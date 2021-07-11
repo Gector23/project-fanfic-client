@@ -7,15 +7,15 @@ import { signOut } from "../actions/user";
 
 const Header = () => {
   const history = useHistory();
-  const user = useSelector(state => state.user.data);
+  const userData = useSelector(state => state.user.data);
   const dispatch = useDispatch();
 
   const handleProfile = useCallback(() => {
-    history.push(`/profile/${user._id}`);
-  }, [history, user]);
+    history.push(`/profile/${userData._id}`);
+  }, [history, userData]);
 
   const handleSignOut = useCallback(() => {
-    dispatch(signOut(), { shouldHandleLoadingState: true });
+    dispatch(signOut(), { shouldHandleLoadingState: true, process: "sign-out" });
   }, [dispatch]);
 
   return (
@@ -30,9 +30,10 @@ const Header = () => {
           </Form>
           <Nav>
             <Link className="nav-link" to="/main">Home</Link>
+            {userData && userData.isAdmin && <Link className="nav-link" to="/admin">Admin</Link>}
             {
-              user ? (
-                <NavDropdown title={user.login} id="basic-nav-dropdown">
+              userData ? (
+                <NavDropdown title={userData.login} id="basic-nav-dropdown">
                   <NavDropdown.Item onClick={handleProfile}>Profile</NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item onClick={handleSignOut}>Sign Out</NavDropdown.Item>

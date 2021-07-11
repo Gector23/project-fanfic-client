@@ -1,5 +1,9 @@
 import axios from "axios";
 
+import store from "./store";
+
+import { BLOCKED } from "../constants/user";
+
 const api = axios.create({
   baseURL: "http://localhost:5000/api",
   withCredentials: true
@@ -17,6 +21,11 @@ api.interceptors.response.use(response => {
     const response = await api.get("/auth/refresh");
     localStorage.setItem("accessToken", response.data.accessToken);
     return api.request(err.config);
+  }
+  if (err.response.status === 403) {
+    if (err.response.data.message === "You are blocked.") {
+      store.dispatch({ type: BLOCKED });
+    }
   }
   throw err;
 });

@@ -29,25 +29,25 @@ const Fanfic = ({ fanficId, readIcon = true, controlIcons = false }) => {
 
   useEffect(() => {
     if (!fanfic || (fanfic.status === "success" && lastUpdate && fanfic.data.lastUpdate !== lastUpdate)) {
-      dispatch(getFanfic(fanficId));
+      dispatch(getFanfic(fanficId), { shouldHandleLoadingState: true, process: fanficId });
     }
   }, [dispatch, fanficId, fanfic, lastUpdate]);
 
   const handleUpdateFanfic = update => {
-    dispatch(updateFanfic(fanficId, update));
+    dispatch(updateFanfic(fanficId, update), { shouldHandleLoadingState: true, process: fanficId });
     onHideFanficForm();
   };
 
   const handleDeleteFanfic = useCallback(() => {
-    dispatch(deleteFanfic(fanficId));
+    dispatch(deleteFanfic(fanficId), { shouldHandleLoadingState: true, process: fanficId });
   }, [dispatch, fanficId]);
 
   const handleFavoriteClick = useCallback(() => {
-    dispatch(toggleFanficFavorite(fanficId, fanfic.isFavorited));
+    dispatch(toggleFanficFavorite(fanficId, fanfic.isFavorited), { shouldHandleLoadingState: true, process: fanficId });
   }, [dispatch, fanficId, fanfic?.isFavorited]);
 
   const handleRate = value => {
-    dispatch(setFanficRate(fanficId, value));
+    dispatch(setFanficRate(fanficId, value), { shouldHandleLoadingState: true, process: fanficId });
   };
 
   let fanficCardButtons = [];

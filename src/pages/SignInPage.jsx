@@ -21,7 +21,7 @@ const SignInPage = () => {
   };
 
   const onSubmit = data => {
-    dispatch(signIn(data.email, data.password), { shouldHandleLoadingState: true });
+    dispatch(signIn(data.email, data.password), { shouldHandleLoadingState: true, process: "sign-in" });
     reset({ email: "", password: "" });
   };
 

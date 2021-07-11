@@ -1,10 +1,14 @@
 import { useSelector } from "react-redux";
 
 const useRelation = id => {
-  const isSignedIn = useSelector(state => state.user.status === "success");
-  const isOwner = useSelector(state => state.user.data?._id === id);
-  const hasAccess = useSelector(state => (isOwner || state.user.data?.isAdmin) ? true : false);
-  return {isSignedIn, isOwner, hasAccess};
+  const user = useSelector(state => state.user);
+
+  const isSignedIn = user?.status === "success";
+  const isOwner = isSignedIn && user.data._id === id;
+  const isAdmin = isSignedIn && user.data.isAdmin;
+  const hasAccess = isSignedIn && (isOwner || isAdmin);
+
+  return {isSignedIn, isOwner, isAdmin, hasAccess};
 };
 
 export default useRelation;

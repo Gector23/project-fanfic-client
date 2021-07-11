@@ -2,9 +2,16 @@ import { Card } from "react-bootstrap";
 
 import Fandom from "./Fandom";
 
-const ProfileCard = ({ profileData }) => {
+const ProfileCard = ({ profileData, buttons }) => {
   return (
     <Card className="mb-5">
+      {buttons.length !== 0 && (
+        <Card.Header>
+          <div className="d-flex justify-content-end">
+            {buttons}
+          </div>
+        </Card.Header>
+      )}
       <Card.Body>
         <div className="mb-1">Login: {profileData.login}</div>
         <div className="mb-1">Admin: {String(profileData.isAdmin)}</div>

@@ -25,11 +25,11 @@ const FanficPage = () => {
   const dispatch = useDispatch();
 
   const handleMoveChapter = (chapterId, number) => {
-    dispatch(moveChapter(fanficId, chapterId, number));
+    dispatch(moveChapter(fanficId, chapterId, number), { shouldHandleLoadingState: true, process: fanficId });
   };
 
   const handleCreateChapter = chapterData => {
-    dispatch(createChapter(chapterData, fanficId), { shouldHandleLoadingState: true });
+    dispatch(createChapter(chapterData, fanficId), { shouldHandleLoadingState: true, process: fanficId });
     onHideChapterForm();
   };
 

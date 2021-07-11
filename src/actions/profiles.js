@@ -24,3 +24,52 @@ export const getProfile = userId => {
     }
   };
 };
+
+export const toggleProfileAdmin = (userId, isAdmin) => {
+  return async dispatch => {
+    try {
+      isAdmin ? (
+        await api.patch(`/user/${userId}/remove-admin`)
+      ) : (
+        await api.patch(`/user/${userId}/set-admin`)
+      )
+      dispatch({
+        type: profileConstans.REMOVE_PROFILE, payload: {
+          userId
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+export const toggleProfileBlock = (userId, isBlocked) => {
+  return async dispatch => {
+    try {
+      isBlocked ? (
+        await api.patch(`/user/${userId}/unblock`)
+      ) : (
+        await api.patch(`/user/${userId}/block`)
+      )
+      dispatch({
+        type: profileConstans.REMOVE_PROFILE, payload: {
+          userId
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+export const deleteProfile = userId => {
+  return async dispatch => {
+    try {
+      await api.delete(`/user/${userId}`);
+      dispatch({ type: profileConstans.REMOVE_PROFILE, payload: { userId } });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};

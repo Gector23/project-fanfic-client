@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { Spinner as BSSpinner } from "react-bootstrap";
 
 const Spinner = () => {
-  const isLoading = useSelector(state => state.loading);
+  const isLoading = useSelector(state => state.loading.status);
 
   return (
     isLoading && (

@@ -12,7 +12,9 @@ import ActivatePage from "../pages/ActivatePage";
 import MainPage from "../pages/MainPage";
 import FanficPage from "../pages/FanficPage";
 import ProfilePage from "../pages/ProfilePage";
+import AdminPage from "../pages/AdminPage";
 import NotActivated from "../components/NotActivated";
+import UserBlocked from "../components/UserBlocked";
 import SetPreferences from "./SetPreferences";
 import Spinner from "../components/Spinner";
 
@@ -22,27 +24,14 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(refresh());
+    dispatch(refresh(), { shouldHandleLoadingState: true, process: "refresh" });
   }, [dispatch]);
-
-  switch (location.pathname) {
-    case "/sign-up":
-      if (userData) {
-        return <Redirect to="/sign-in" />;
-      }
-      break;
-    case "/sign-in":
-      if (userData) {
-        return <Redirect to="/main" />;
-      }
-      break;
-    default:
-      break;
-  }
 
   return (
     <Container>
-      {userData && !userData.isActivated && location.pathname !== "/activate" ? (
+      {userData && userData.isBlocked ? (
+        <UserBlocked />
+      ) : userData && !userData.isActivated && location.pathname !== "/activate" ? (
         <NotActivated userEmail={userData.email} />
       ) : userData && !userData.isInitializedPreferences && location.pathname !== "/activate" ? (
         <SetPreferences userId={userData._id} initial={true} />
@@ -51,10 +40,18 @@ const App = () => {
           <Header />
           <Switch>
             <Route exact path="/sign-up">
-              <SignUpPage />
+              {!userData ? (
+                <SignUpPage />
+              ) : (
+                <Redirect to="/main" />
+              )}
             </Route>
             <Route exact path="/sign-in">
-              <SignInPage />
+              {!userData ? (
+                <SignInPage />
+              ) : (
+                <Redirect to="/main" />
+              )}
             </Route>
             <Route path="/activate">
               <ActivatePage />
@@ -68,9 +65,16 @@ const App = () => {
             <Route path="/main">
               <MainPage />
             </Route>
+            <Route path="/admin">
+              {userData && userData.isAdmin ? (
+                <AdminPage />
+              ) : (
+                <Redirect to="/main" />
+              )}
+            </Route>
             <Route exact path="/">
-            <Redirect to={"/main"} />
-          </Route>
+              <Redirect to={"/main"} />
+            </Route>
           </Switch>
           <Spinner />
         </>

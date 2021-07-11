@@ -7,7 +7,7 @@ const defaultData = {
 };
 
 const ChapterForm = ({ showEditForm, initialData = defaultData, onHideEditForm, onSetChapter }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
   const validationRules = {
     name: {
@@ -23,6 +23,7 @@ const ChapterForm = ({ showEditForm, initialData = defaultData, onHideEditForm, 
       chapterData.name = data.name;
     }
     onSetChapter(chapterData);
+    reset(defaultData);
   };
 
   return (

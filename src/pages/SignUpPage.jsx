@@ -26,7 +26,7 @@ const SignUpPage = () => {
   };
 
   const onSubmit = data => {
-    dispatch(signUp(data.email, data.login, data.password), { shouldHandleLoadingState: true });
+    dispatch(signUp(data.email, data.login, data.password), { shouldHandleLoadingState: true, process: "sign-up" });
     reset({ email: "", ogin: "", password: "" });
   }
 

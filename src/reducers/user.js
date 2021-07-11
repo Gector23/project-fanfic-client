@@ -26,8 +26,12 @@ const user = (state = {}, action) => {
 
     case userConstants.ACTIVATED:
       stateClone = cloneDeep(state);
-      console.log(JSON.stringify(stateClone));
       stateClone.data.isActivated = true;
+      return stateClone;
+
+    case userConstants.BLOCKED:
+      stateClone = cloneDeep(state);
+      stateClone.data.isBlocked = true;
       return stateClone;
 
     case userConstants.INITIALIZEDPREFERENCES:

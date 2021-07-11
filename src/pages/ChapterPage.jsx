@@ -27,8 +27,8 @@ const ChapterPage = ({ fanficId, chapterId, chaptersLength, onChapterChange }) =
   }, [onChapterChange, chapterNumber]);
 
   useEffect(() => {
-    if (!chapter || (chapter.status === "success" && lastUpdate && chapter.data.lastUpdate !== lastUpdate)) {
-      dispatch(getChapter(chapterId), { shouldHandleLoadingState: true });
+    if (chapterId && (!chapter || (chapter.status === "success" && lastUpdate && chapter.data.lastUpdate !== lastUpdate))) {
+      dispatch(getChapter(chapterId), { shouldHandleLoadingState: true, process: chapterId });
     }
   }, [dispatch, chapterId, chapter, lastUpdate]);
 
@@ -37,16 +37,16 @@ const ChapterPage = ({ fanficId, chapterId, chaptersLength, onChapterChange }) =
   };
 
   const handleUpdateChapter = update => {
-    dispatch(updateChapter(fanficId, chapterId, update));
+    dispatch(updateChapter(fanficId, chapterId, update), { shouldHandleLoadingState: true, process: chapterId });
     onHideEditForm();
   };
 
   const handleDeleteChapter = useCallback(() => {
-    dispatch(deleteChapter(fanficId, chapterId));
+    dispatch(deleteChapter(fanficId, chapterId), { shouldHandleLoadingState: true, process: chapterId });
   }, [dispatch, fanficId, chapterId]);
 
   const handleLikeClick = useCallback(() => {
-    dispatch(toggleChapterLike(chapterId, chapter.isLiked));
+    dispatch(toggleChapterLike(chapterId, chapter.isLiked), { shouldHandleLoadingState: true, process: chapterId });
   }, [dispatch, chapterId, chapter?.isLiked]);
 
   const handlePrevChapter = () => {

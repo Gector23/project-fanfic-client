@@ -24,7 +24,7 @@ const SetPreferences = ({ userId, initial = false, intialPreferences = [] }) => 
   };
 
   const handleSetPreferences = preferences => {
-    dispatch(setPreferences(userId, preferences, initial));
+    dispatch(setPreferences(userId, preferences, initial), { shouldHandleLoadingState: true, process: userId });
   };
 
   return (
