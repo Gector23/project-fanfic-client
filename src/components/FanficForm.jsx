@@ -64,6 +64,9 @@ const FanficForm = ({ initialData = defaultData, onHideEditForm, onSetFanfic }) 
         };
       });
     }
+    if (!tags.length) {
+      fanficData.tags = [];
+    }
     onSetFanfic(fanficData);
   };
 

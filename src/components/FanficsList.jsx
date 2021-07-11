@@ -19,7 +19,7 @@ const FanficsList = ({ fanfics, currentPage, maxFanfics, onPrevPage, onNextPage,
           />
         </>
       ) : (
-        <Notice heading="Fanfics not found" message="This user does not have any fanfics yet" />
+        <Notice heading="Fanfics not found" message="No fanfics for this request" />
       )}
     </div>
   );

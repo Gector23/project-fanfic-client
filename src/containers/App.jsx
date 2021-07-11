@@ -13,6 +13,7 @@ import MainPage from "../pages/MainPage";
 import FanficPage from "../pages/FanficPage";
 import ProfilePage from "../pages/ProfilePage";
 import AdminPage from "../pages/AdminPage";
+import SearchPage from "../pages/SearchPage";
 import NotActivated from "../components/NotActivated";
 import UserBlocked from "../components/UserBlocked";
 import SetPreferences from "./SetPreferences";
@@ -71,6 +72,9 @@ const App = () => {
               ) : (
                 <Redirect to="/main" />
               )}
+            </Route>
+            <Route path="/search">
+              <SearchPage />
             </Route>
             <Route exact path="/">
               <Redirect to={"/main"} />

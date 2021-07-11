@@ -1,9 +1,11 @@
 import { useCallback } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Navbar, Form, FormControl, Nav, NavDropdown, Button } from "react-bootstrap";
+import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 
 import { signOut } from "../actions/user";
+
+import SearchForm from "../components/SearchForm";
 
 const Header = () => {
   const history = useHistory();
@@ -24,10 +26,7 @@ const Header = () => {
         <Navbar.Brand>Project Fanfic</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Form className="my-2 my-lg-0 mr-auto" inline>
-            <FormControl className="mr-sm-2" type="text" placeholder="Search" />
-            <Button className="my-2 my-sm-0" variant="outline-success" type="submite">Search</Button>
-          </Form>
+          <SearchForm />
           <Nav>
             <Link className="nav-link" to="/main">Home</Link>
             {userData && userData.isAdmin && <Link className="nav-link" to="/admin">Admin</Link>}
