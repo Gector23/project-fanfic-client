@@ -42,6 +42,13 @@ const profiles = (state = [], action) => {
       };
       return stateClone;
 
+    case profileConstans.PROFILE_DELETED:
+      stateClone = cloneDeep(state);
+      profileIndex = stateClone.findIndex(profile => profile.data._id === action.payload.userId);
+      stateClone[profileIndex].status = "deleted";
+      stateClone[profileIndex].message = "Profile deleted";
+      return stateClone;
+
     case profileConstans.REMOVE_PROFILE:
       stateClone = cloneDeep(state);
       return stateClone.filter(profile => profile.data._id !== action.payload.userId);

@@ -97,6 +97,7 @@ const Fanfic = ({ fanficId, readIcon = true, controlIcons = false }) => {
       <div>
         <FanficCard
           fanficData={fanfic.data}
+          isSignedIn={isSignedIn}
           userRate={fanfic.userRate}
           buttons={fanficCardButtons}
           onRate={handleRate}

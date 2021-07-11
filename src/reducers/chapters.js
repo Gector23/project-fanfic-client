@@ -55,6 +55,13 @@ const chapters = (state = [], action) => {
       }
       return stateClone;
 
+    case chaptersConstants.CHAPTER_DELETED:
+      stateClone = cloneDeep(state);
+      chapterIndex = stateClone.findIndex(chapter => chapter.data._id === action.payload.chapterId);
+      stateClone[chapterIndex].status = "deleted";
+      stateClone[chapterIndex].message = "Chapter deleted";
+      return stateClone;
+
     case chaptersConstants.REMOVE_CHAPTER:
       stateClone = cloneDeep(state);
       return stateClone.filter(chapter => chapter.data._id !== action.payload.chapterId);

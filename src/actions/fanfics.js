@@ -101,7 +101,7 @@ export const deleteFanfic = (fanficId) => {
     try {
       await api.delete(`/fanfic/${fanficId}`);
       dispatch({
-        type: fanficsConstants.REMOVE_FANFIC, payload: {
+        type: fanficsConstants.FANFIC_DELETED, payload: {
           fanficId
         }
       });

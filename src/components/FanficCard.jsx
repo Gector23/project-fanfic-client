@@ -5,7 +5,7 @@ import Rate from "./Rate";
 import Fandom from "./Fandom";
 import Tag from "./Tag";
 
-const FanficCard = ({ fanficData, userRate, buttons, onRate }) => {
+const FanficCard = ({ fanficData, userRate, isSignedIn, buttons, onRate }) => {
   return (
     <Card className="mb-5">
       <Card.Header className="d-flex justify-content-between align-items-center">
@@ -27,8 +27,8 @@ const FanficCard = ({ fanficData, userRate, buttons, onRate }) => {
           Last update: {new Date(fanficData.lastUpdate).toLocaleString()}
         </span>
         <div className="d-flex text-primary">
-          <span className="mr-1">Rating: {fanficData.rating} on {fanficData.ratesCount} user ratings</span>
-          <Rate userRate={userRate} onRate={onRate} />
+          <span className="mr-1">Rating: {fanficData.rating} on {fanficData.ratesCount} users ratings</span>
+          {isSignedIn && <Rate userRate={userRate} onRate={onRate} />}
         </div>
       </Card.Footer>
     </Card>

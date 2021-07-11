@@ -67,7 +67,7 @@ export const deleteProfile = userId => {
   return async dispatch => {
     try {
       await api.delete(`/user/${userId}`);
-      dispatch({ type: profileConstans.REMOVE_PROFILE, payload: { userId } });
+      dispatch({ type: profileConstans.PROFILE_DELETED, payload: { userId } });
     } catch (err) {
       console.log(err);
     }

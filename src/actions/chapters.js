@@ -99,7 +99,7 @@ export const deleteChapter = (fanficId, chapterId) => {
         }
       });
       dispatch({
-        type: chaptersConstants.REMOVE_CHAPTER, payload: {
+        type: chaptersConstants.CHAPTER_DELETED, payload: {
           chapterId
         }
       });

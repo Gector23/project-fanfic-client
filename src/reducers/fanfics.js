@@ -50,6 +50,13 @@ const fanfics = (state = [], action) => {
       stateClone[fanficIndex].isFavorited = stateClone[fanficIndex].isFavorited ? false : true;
       return stateClone;
 
+    case fanficsContants.FANFIC_DELETED:
+      stateClone = cloneDeep(state);
+      fanficIndex = stateClone.findIndex(fanfic => fanfic.data._id === action.payload.fanficId);
+      stateClone[fanficIndex].status = "deleted";
+      stateClone[fanficIndex].message = "Fanfic deleted";
+      return stateClone;
+
     case fanficsContants.REMOVE_FANFIC:
       stateClone = cloneDeep(state);
       return stateClone.filter(fanfic => fanfic.data._id !== action.payload.fanficId);
