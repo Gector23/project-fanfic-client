@@ -2,7 +2,7 @@ import axios from "axios";
 
 import store from "./store";
 
-import { BLOCKED } from "../constants/user";
+import { REMOVE_USER, BLOCKED } from "../constants/user";
 
 const api = axios.create({
   baseURL: "http://localhost:5000/api",
@@ -25,6 +25,9 @@ api.interceptors.response.use(response => {
   if (err.response.status === 403) {
     if (err.response.data.message === "You are blocked.") {
       store.dispatch({ type: BLOCKED });
+    }
+    if (err.response.data.message === "Account deleted.") {
+      store.dispatch({ type: REMOVE_USER });
     }
   }
   throw err;
