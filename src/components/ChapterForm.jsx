@@ -14,15 +14,25 @@ const ChapterForm = ({ showEditForm, initialData = defaultData, onHideEditForm, 
       required: { value: true, message: "Chapter name is required" },
       minLength: { value: 10, message: "Chapter name min length is 10" },
       maxLength: { value: 80, message: "Chapter name max length is 80" }
+    },
+    image: {
+      validate: {
+        defaultRequired: files => !files.length && initialData.default ? "Image is required" : null,
+        isImage: files => files.length && !files[0].type.match(/image/) ? "The selected file is not a image" : null
+      }
     }
   };
 
   const onSubmit = data => {
     let chapterData = {};
+    let chapterFile = new FormData();
     if (data.name !== initialData.name) {
       chapterData.name = data.name;
     }
-    onSetChapter(chapterData);
+    if (data.image.length) {
+      chapterFile.append("image", data.image[0]);
+    }
+    onSetChapter({ chapterData, chapterFile });
     reset(defaultData);
   };
 
@@ -40,6 +50,16 @@ const ChapterForm = ({ showEditForm, initialData = defaultData, onHideEditForm, 
             />
             <Form.Control.Feedback type="invalid">
               {errors.name?.message}
+            </Form.Control.Feedback>
+          </div>
+          <div className="mb-3">
+            <Form.Control
+              isInvalid={errors.image}
+              type="file"
+              {...register("image", { ...validationRules.image })}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.image?.message}
             </Form.Control.Feedback>
           </div>
           <div className="text-center">

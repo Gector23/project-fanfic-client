@@ -27,10 +27,13 @@ export const getChapter = chapterId => {
   };
 };
 
-export const createChapter = (chapterData, fanficId) => {
+export const createChapter = (data, fanficId) => {
   return async dispatch => {
     try {
-      const response = await api.post("/chapter/create", {fanfic: fanficId, ...chapterData});
+      const response = await api.post("/chapter/create", { fanfic: fanficId, ...data.chapterData });
+      await api.post(`/chapter/${response.data.chapter._id}/image`, data.chapterFile, {
+        headers: { "Content-Type": "multipart/form-data" }
+      }); 
       dispatch({
         type: REMOVE_FANFIC, payload: {
           fanficId
@@ -53,7 +56,12 @@ export const createChapter = (chapterData, fanficId) => {
 export const updateChapter = (fanficId, chapterId, update) => {
   return async dispatch => {
     try {
-      await api.patch(`/chapter/update/${chapterId}`, update);
+      await api.patch(`/chapter/${chapterId}`, update.chapterData);
+      if (update.chapterFile) {
+        await api.post(`/chapter/${chapterId}/image`, update.chapterFile, {
+          headers: { "Content-Type": "multipart/form-data" }
+        });
+      }
       dispatch({
         type: REMOVE_FANFIC, payload: {
           fanficId

@@ -28,8 +28,8 @@ const FanficPage = () => {
     dispatch(moveChapter(fanficId, chapterId, number), { shouldHandleLoadingState: true, process: fanficId });
   };
 
-  const handleCreateChapter = chapterData => {
-    dispatch(createChapter(chapterData, fanficId), { shouldHandleLoadingState: true, process: fanficId });
+  const handleCreateChapter = data => {
+    dispatch(createChapter(data, fanficId), { shouldHandleLoadingState: true, process: fanficId });
     onHideChapterForm();
   };
 

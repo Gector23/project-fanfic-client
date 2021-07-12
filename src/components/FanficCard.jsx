@@ -27,7 +27,7 @@ const FanficCard = ({ fanficData, userRate, isSignedIn, buttons, onRate }) => {
           Last update: {new Date(fanficData.lastUpdate).toLocaleString()}
         </span>
         <div className="d-flex text-primary">
-          <span className="mr-1">Rating: {fanficData.rating} on {fanficData.ratesCount} users ratings</span>
+          <span className="mr-1">Rating: {fanficData.rating} on {fanficData.ratesCount} users rates</span>
           {isSignedIn && <Rate userRate={userRate} onRate={onRate} />}
         </div>
       </Card.Footer>

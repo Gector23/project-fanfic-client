@@ -114,7 +114,7 @@ export const deleteFanfic = (fanficId) => {
 export const moveChapter = (fanficId, chapterId, number) => {
   return async dispatch => {
     try {
-      await api.patch(`/chapter/move/${chapterId}`, { number });
+      await api.patch(`/chapter/${chapterId}/move`, { number });
       dispatch({
         type: fanficsConstants.REMOVE_FANFIC, payload: {
           fanficId

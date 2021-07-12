@@ -35,6 +35,7 @@ const ChapterCard = (props) => {
           <IconButton icon={<DeleteIcon />} type="danger" onClick={props.onDeleteChapter} />
         </div>
       </Card.Header>
+      {props.chapterData.imageUrl && <Card.Img variant="top" src={props.chapterData.imageUrl} />}
       <Card.Body>
         <Card.Title>{props.chapterData.name}</Card.Title>
         <Card.Text as="div">

@@ -6,7 +6,6 @@ import api from "../utils/api";
 const useFetchProfiles = (currentPage,  profilesStateHash) => {
   const [profiles, setProfiles] = useState({data: []});
   useEffect(() => {
-    console.log(profilesStateHash);
     let cleanupFunction = false;
     const fetchProfiles = async () => {
       try {
