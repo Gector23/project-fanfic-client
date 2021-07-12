@@ -31,49 +31,47 @@ const SignUpPage = () => {
   }
 
   return (
-    <Container>
-      <Row>
-        <Col className="text-center">
-          <Form onSubmit={handleSubmit(onSubmit)} >
-            <div className="mb-3">
-              <Form.Control
-                isInvalid={errors.email}
-                type="email"
-                placeholder="Email"
-                {...register("email", { ...validationRules.email })}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.email?.message}
-              </Form.Control.Feedback>
-            </div>
-            <div className="mb-3">
-              <Form.Control
-                isInvalid={errors.login}
-                type="string"
-                placeholder="Login"
-                {...register("login", { ...validationRules.login })}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.login?.message}
-              </Form.Control.Feedback>
-            </div>
-            <div className="mb-3">
-              <Form.Control
-                isInvalid={errors.password}
-                type="password"
-                placeholder="Password"
-                {...register("password", { ...validationRules.password })}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.password?.message}
-              </Form.Control.Feedback>
-            </div>
-            <Button variant="primary" type="submit">Sign Up</Button>
-          </Form>
-          <Link className="btn btn-link" to="/sign-in" replace >Sign In</Link>
-        </Col>
-      </Row>
-    </Container>
+    <Row className="justify-content-center">
+      <Col className="text-center" sm={8} md={6}>
+        <Form onSubmit={handleSubmit(onSubmit)} >
+          <div className="mb-3">
+            <Form.Control
+              isInvalid={errors.email}
+              type="email"
+              placeholder="Email"
+              {...register("email", { ...validationRules.email })}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.email?.message}
+            </Form.Control.Feedback>
+          </div>
+          <div className="mb-3">
+            <Form.Control
+              isInvalid={errors.login}
+              type="string"
+              placeholder="Login"
+              {...register("login", { ...validationRules.login })}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.login?.message}
+            </Form.Control.Feedback>
+          </div>
+          <div className="mb-3">
+            <Form.Control
+              isInvalid={errors.password}
+              type="password"
+              placeholder="Password"
+              {...register("password", { ...validationRules.password })}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.password?.message}
+            </Form.Control.Feedback>
+          </div>
+          <Button variant="primary" type="submit">Sign Up</Button>
+        </Form>
+        <Link className="btn btn-link" to="/sign-in" replace >Sign In</Link>
+      </Col>
+    </Row>
   );
 };
 

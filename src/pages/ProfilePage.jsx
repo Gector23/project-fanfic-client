@@ -15,7 +15,7 @@ import SetPreferences from "../containers/SetPreferences";
 const ProfilePage = () => {
   const { userId } = useParams();
   const profile = useSelector(state => state.profiles.find(profile => profile.data?._id === userId));
-  const { hasAccess } = useRelation(userId);
+  const { isOwner } = useRelation(userId);
   const [showEditForm, onShowEditForm, onHideEditForm] = useShowModal();
   const { path, url } = useRouteMatch();
   const dispatch = useDispatch();
@@ -30,21 +30,21 @@ const ProfilePage = () => {
       <Profile userId={userId} profileIcon={false} />
       {!profile || profile?.status !== "success" ? null : (
         <>
-          <ProfileNavigation editAccess={hasAccess} />
+          <ProfileNavigation editAccess={isOwner} />
           {showEditForm && <FanficForm onHideEditForm={onHideEditForm} onSetFanfic={handleCreateFanfic} />}
           <Switch>
             <Route exact path={`${path}/fanfics/:currentPage`}>
               <ProfileFanfics
                 userId={userId}
                 fanficsType="fanfics"
-                onTitleButtonClick={hasAccess ? onShowEditForm : null}
+                onTitleButtonClick={isOwner ? onShowEditForm : null}
               />
             </Route>
             <Route exact path={`${path}/favorites/:currentPage`}>
               <ProfileFanfics userId={userId} fanficsType="favorites" />
             </Route>
             <Route exact path={`${path}/edit`}>
-              {hasAccess ? (
+              {isOwner ? (
                 <SetPreferences userId={profile.data._id} intialPreferences={profile.data?.preferences} />
               ) : (
                 <Redirect to={`${url}/fanfics`} />
