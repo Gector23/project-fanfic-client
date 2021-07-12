@@ -17,7 +17,9 @@ const ChapterCard = (props) => {
 
   const handleUpdateContent = () => {
     props.onUpdateChapter({
-      content: editorValue
+      chapterData: {
+        content: editorValue
+      }
     });
   };
 
